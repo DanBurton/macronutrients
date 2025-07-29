@@ -172,6 +172,81 @@
   color: #95a5a6;
   font-weight: bold;
   font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calculated-indicator {
+  color: #bdc3c7;
+  font-size: 0.8em;
+  margin-left: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 25px;
+}
+
+.inline-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-left: 0.5rem;
+}
+
+.inline-button {
+  width: 14px;
+  height: 12px;
+  border: 1px solid #7fb069;
+  border-radius: 2px;
+  background: #2c3e50;
+  color: #7fb069;
+  font-size: 0.6rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.inline-button:hover {
+  background: #7fb069;
+  color: #ffffff;
+}
+
+.inline-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: #95a5a6;
+  color: #95a5a6;
+}
+
+.inline-button:disabled:hover {
+  background: #2c3e50;
+  color: #95a5a6;
+}
+
+.inline-button.minus {
+  border-color: #c0756b;
+  color: #c0756b;
+}
+
+.inline-button.minus:hover {
+  background: #c0756b;
+  color: #ffffff;
+}
+
+.inline-button.minus:disabled {
+  border-color: #95a5a6;
+  color: #95a5a6;
+}
+
+.inline-button.minus:disabled:hover {
+  background: #2c3e50;
+  color: #95a5a6;
 }
 
 @media (max-width: 768px) {

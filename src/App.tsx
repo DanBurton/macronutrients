@@ -10,6 +10,7 @@ const macroPresets = {
   highProtein: { name: 'High Protein', carbs: 0.30, protein: 0.40, fat: 0.30 },
   lowCarb: { name: 'Low Carb', carbs: 0.20, protein: 0.30, fat: 0.50 },
   keto: { name: 'Keto', carbs: 0.05, protein: 0.20, fat: 0.75 },
+  custom: { name: 'Custom', carbs: 0.40, protein: 0.30, fat: 0.30 },
 } as const;
 
 type PresetKey = keyof typeof macroPresets;
@@ -28,6 +29,16 @@ function App() {
     return savedPreset && savedPreset in macroPresets ? savedPreset : 'balanced';
   });
 
+  const [customCarbs, setCustomCarbs] = useState(() => {
+    const saved = localStorage.getItem('customCarbs');
+    return saved ? Number(saved) : 40;
+  });
+
+  const [customProtein, setCustomProtein] = useState(() => {
+    const saved = localStorage.getItem('customProtein');
+    return saved ? Number(saved) : 30;
+  });
+
   useEffect(() => {
     localStorage.setItem('dailyCalories', dailyCalories.toString());
   }, [dailyCalories]);
@@ -36,7 +47,19 @@ function App() {
     localStorage.setItem('macroPreset', selectedPreset);
   }, [selectedPreset]);
 
-  const currentMacros = macroPresets[selectedPreset];
+  useEffect(() => {
+    localStorage.setItem('customCarbs', customCarbs.toString());
+  }, [customCarbs]);
+
+  useEffect(() => {
+    localStorage.setItem('customProtein', customProtein.toString());
+  }, [customProtein]);
+
+  const customFat = Math.max(0, 100 - customCarbs - customProtein);
+
+  const currentMacros = selectedPreset === 'custom'
+    ? { carbs: customCarbs / 100, protein: customProtein / 100, fat: customFat / 100 }
+    : macroPresets[selectedPreset];
 
   return (
     <div className="app">
@@ -78,6 +101,9 @@ function App() {
               const percentage = Math.round(ratio * 100);
               const label = macroLabels[macro];
 
+              const canEdit = selectedPreset === 'custom' && macro !== 'fat';
+              const currentValue = macro === 'carbs' ? customCarbs : macro === 'protein' ? customProtein : customFat;
+
               return (
                 <div key={macro} className="macro-item">
                   <span className="macro-name">{label}</span>
@@ -86,7 +112,40 @@ function App() {
                   <span className="macro-conversion-rate">{caloriesPerGramValue} kcal/g</span>
                   <span className="macro-equals">=</span>
                   <span className="macro-calories">{calories} kcal</span>
-                  <span className="macro-percentage">({percentage}%)</span>
+                  <span className="macro-percentage">
+                    ({percentage}%)
+                    {selectedPreset === 'custom' && macro === 'fat' && <span className="calculated-indicator">⚖️</span>}
+                    {canEdit && (
+                      <div className="inline-controls">
+                        <button
+                          className="inline-button"
+                          onClick={() => {
+                            if (macro === 'carbs') {
+                              setCustomCarbs(customCarbs + 1);
+                            } else if (macro === 'protein') {
+                              setCustomProtein(customProtein + 1);
+                            }
+                          }}
+                          disabled={(customCarbs + customProtein) >= 100}
+                        >
+                          +
+                        </button>
+                        <button
+                          className="inline-button minus"
+                          onClick={() => {
+                            if (macro === 'carbs') {
+                              setCustomCarbs(customCarbs - 1);
+                            } else if (macro === 'protein') {
+                              setCustomProtein(customProtein - 1);
+                            }
+                          }}
+                          disabled={currentValue <= 0}
+                        >
+                          −
+                        </button>
+                      </div>
+                    )}
+                  </span>
                 </div>
               );
             })}
