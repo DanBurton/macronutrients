@@ -178,9 +178,8 @@
 }
 
 .calculated-indicator {
-  color: #bdc3c7;
   font-size: 0.8em;
-  margin-left: 0.5rem;
+  margin-left: 0.25rem;
   display: flex;
   align-items: center;
   justify-content: center;

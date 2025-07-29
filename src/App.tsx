@@ -18,6 +18,37 @@ type PresetKey = keyof typeof macroPresets;
 const macroLabels = { carbs: 'Carbs', protein: 'Protein', fat: 'Fat' };
 const caloriesPerGram = { carbs: 4, protein: 4, fat: 9 };
 
+interface MacroControlsProps {
+  setter: ((value: number) => void) | null;
+  currentValue: number;
+  upDisabled?: boolean;
+}
+
+function MacroControls({ setter, currentValue, upDisabled }: MacroControlsProps) {
+  if (!setter) {
+    return (
+      <div className="inline-controls">
+        <span className="calculated-indicator">⚖️</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="inline-controls">
+      <button
+        className="inline-button"
+        onClick={() => { setter(currentValue + 1); }}
+        disabled={upDisabled}
+      >+</button>
+      <button
+        className="inline-button minus"
+        onClick={() => { setter(currentValue - 1); }}
+        disabled={currentValue <= 0}
+      >−</button>
+    </div>
+  );
+}
+
 function App() {
   const [dailyCalories, setDailyCalories] = useState(() => {
     const savedCalories = localStorage.getItem('dailyCalories');
@@ -44,12 +75,12 @@ function App() {
   }, [dailyCalories]);
 
   useEffect(() => {
-    localStorage.setItem('macroPreset', selectedPreset);
-  }, [selectedPreset]);
-
-  useEffect(() => {
     localStorage.setItem('customCarbs', customCarbs.toString());
   }, [customCarbs]);
+
+  useEffect(() => {
+    localStorage.setItem('macroPreset', selectedPreset);
+  }, [selectedPreset]);
 
   useEffect(() => {
     localStorage.setItem('customProtein', customProtein.toString());
@@ -101,7 +132,6 @@ function App() {
               const percentage = Math.round(ratio * 100);
               const label = macroLabels[macro];
 
-              const canEdit = selectedPreset === 'custom' && macro !== 'fat';
               const currentValue = macro === 'carbs' ? customCarbs : macro === 'protein' ? customProtein : customFat;
 
               return (
@@ -114,36 +144,12 @@ function App() {
                   <span className="macro-calories">{calories} kcal</span>
                   <span className="macro-percentage">
                     ({percentage}%)
-                    {selectedPreset === 'custom' && macro === 'fat' && <span className="calculated-indicator">⚖️</span>}
-                    {canEdit && (
-                      <div className="inline-controls">
-                        <button
-                          className="inline-button"
-                          onClick={() => {
-                            if (macro === 'carbs') {
-                              setCustomCarbs(customCarbs + 1);
-                            } else if (macro === 'protein') {
-                              setCustomProtein(customProtein + 1);
-                            }
-                          }}
-                          disabled={(customCarbs + customProtein) >= 100}
-                        >
-                          +
-                        </button>
-                        <button
-                          className="inline-button minus"
-                          onClick={() => {
-                            if (macro === 'carbs') {
-                              setCustomCarbs(customCarbs - 1);
-                            } else if (macro === 'protein') {
-                              setCustomProtein(customProtein - 1);
-                            }
-                          }}
-                          disabled={currentValue <= 0}
-                        >
-                          −
-                        </button>
-                      </div>
+                    {selectedPreset === 'custom' && (
+                      <MacroControls
+                        setter={macro === 'carbs' ? setCustomCarbs : macro === 'protein' ? setCustomProtein : null}
+                        currentValue={currentValue}
+                        upDisabled={customCarbs + customProtein >= 100}
+                      />
                     )}
                   </span>
                 </div>
