@@ -140,6 +140,41 @@ function EditGoals({
   );
 }
 
+interface GoalsSummaryProps {
+  dailyCalories: number;
+  currentMacros: { carbs: number; protein: number; fat: number };
+  setIsCollapsed: (collapsed: boolean) => void;
+}
+
+function GoalsSummary({ dailyCalories, currentMacros, setIsCollapsed }: GoalsSummaryProps) {
+  const carbsGrams = Math.round(dailyCalories * currentMacros.carbs / caloriesPerGram.carbs);
+  const proteinGrams = Math.round(dailyCalories * currentMacros.protein / caloriesPerGram.protein);
+  const fatGrams = Math.round(dailyCalories * currentMacros.fat / caloriesPerGram.fat);
+  
+  const carbsPercent = Math.round(currentMacros.carbs * 100);
+  const proteinPercent = Math.round(currentMacros.protein * 100);
+  const fatPercent = Math.round(currentMacros.fat * 100);
+
+  return (
+    <div className="goals-summary">
+      <div className="summary-single-line">
+        <span className="summary-macros-grams">
+          {carbsGrams}g carbs / {proteinGrams}g protein / {fatGrams}g fat
+        </span>
+        <span className="summary-calories-and-distribution">
+          {dailyCalories} kcal ({carbsPercent}/{proteinPercent}/{fatPercent})
+        </span>
+        <button
+          className="collapse-button settings-cog"
+          onClick={() => setIsCollapsed(false)}
+        >
+          ⚙️
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [dailyCalories, setDailyCalories] = useState(() => {
     const savedCalories = localStorage.getItem('dailyCalories');
@@ -149,6 +184,11 @@ function App() {
   const [selectedPreset, setSelectedPreset] = useState<PresetKey>(() => {
     const savedPreset = localStorage.getItem('macroPreset') as PresetKey;
     return savedPreset && savedPreset in macroPresets ? savedPreset : 'balanced';
+  });
+
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const saved = localStorage.getItem('isCollapsed');
+    return saved ? JSON.parse(saved) : false;
   });
 
   const [customCarbs, setCustomCarbs] = useState(() => {
@@ -177,6 +217,10 @@ function App() {
     localStorage.setItem('customProtein', customProtein.toString());
   }, [customProtein]);
 
+  useEffect(() => {
+    localStorage.setItem('isCollapsed', JSON.stringify(isCollapsed));
+  }, [isCollapsed]);
+
   const customFat = Math.max(0, 100 - customCarbs - customProtein);
 
   const currentMacros = selectedPreset === 'custom'
@@ -187,18 +231,34 @@ function App() {
     <div className="app">
       <main className="app-main">
         <div className="welcome-card">
-          <EditGoals
-            dailyCalories={dailyCalories}
-            setDailyCalories={setDailyCalories}
-            selectedPreset={selectedPreset}
-            setSelectedPreset={setSelectedPreset}
-            customCarbs={customCarbs}
-            setCustomCarbs={setCustomCarbs}
-            customProtein={customProtein}
-            setCustomProtein={setCustomProtein}
-            customFat={customFat}
-            currentMacros={currentMacros}
-          />
+          {isCollapsed ? (
+            <GoalsSummary
+              dailyCalories={dailyCalories}
+              currentMacros={currentMacros}
+              setIsCollapsed={setIsCollapsed}
+            />
+          ) : (
+            <>
+              <EditGoals
+                dailyCalories={dailyCalories}
+                setDailyCalories={setDailyCalories}
+                selectedPreset={selectedPreset}
+                setSelectedPreset={setSelectedPreset}
+                customCarbs={customCarbs}
+                setCustomCarbs={setCustomCarbs}
+                customProtein={customProtein}
+                setCustomProtein={setCustomProtein}
+                customFat={customFat}
+                currentMacros={currentMacros}
+              />
+              <button
+                className="collapse-button"
+                onClick={() => setIsCollapsed(true)}
+              >
+                Set Goals
+              </button>
+            </>
+          )}
         </div>
       </main>
     </div>
