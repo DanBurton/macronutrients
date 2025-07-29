@@ -6,6 +6,7 @@ const macroPresets = {
   athletic: { name: 'Athletic', carbs: 0.55, protein: 0.25, fat: 0.20 },
   usda: { name: 'USDA Food Labels', carbs: 0.55, protein: 0.10, fat: 0.35 },
   balanced: { name: 'Balanced', carbs: 0.45, protein: 0.25, fat: 0.30 },
+  zone: { name: '40 30 30', carbs: 0.40, protein: 0.30, fat: 0.30 },
   highProtein: { name: 'High Protein', carbs: 0.30, protein: 0.40, fat: 0.30 },
   lowCarb: { name: 'Low Carb', carbs: 0.20, protein: 0.30, fat: 0.50 },
   keto: { name: 'Keto', carbs: 0.05, protein: 0.20, fat: 0.75 },
