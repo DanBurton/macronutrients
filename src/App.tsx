@@ -49,6 +49,97 @@ function MacroControls({ setter, currentValue, upDisabled }: MacroControlsProps)
   );
 }
 
+interface EditGoalsProps {
+  dailyCalories: number;
+  setDailyCalories: (value: number) => void;
+  selectedPreset: PresetKey;
+  setSelectedPreset: (preset: PresetKey) => void;
+  customCarbs: number;
+  setCustomCarbs: (value: number) => void;
+  customProtein: number;
+  setCustomProtein: (value: number) => void;
+  customFat: number;
+  currentMacros: { carbs: number; protein: number; fat: number };
+}
+
+function EditGoals({
+  dailyCalories,
+  setDailyCalories,
+  selectedPreset,
+  setSelectedPreset,
+  customCarbs,
+  setCustomCarbs,
+  customProtein,
+  setCustomProtein,
+  customFat,
+  currentMacros
+}: EditGoalsProps) {
+  return (
+    <>
+      <div className="calorie-input">
+        <label htmlFor="calories">Daily Calorie Goal</label>
+        <input
+          id="calories"
+          type="number"
+          value={dailyCalories}
+          onChange={(e) => setDailyCalories(Number(e.target.value))}
+        />
+        <span>kcal</span>
+      </div>
+
+      <div className="preset-selector">
+        <h3>Macronutrient Distribution</h3>
+        <div className="preset-buttons">
+          {Object.entries(macroPresets).map(([key, preset]) => (
+            <button
+              key={key}
+              className={`preset-button ${selectedPreset === key ? 'active' : ''}`}
+              onClick={() => setSelectedPreset(key as PresetKey)}
+            >
+              {preset.name}
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      <div className="macros-preview">
+        <h3>Macronutrient Goals</h3>
+        {(['carbs', 'protein', 'fat'] as const).map(macro => {
+          const ratio = currentMacros[macro];
+          const caloriesPerGramValue = caloriesPerGram[macro];
+          const grams = Math.round(dailyCalories * ratio / caloriesPerGramValue);
+          const calories = Math.round(dailyCalories * ratio);
+          const percentage = Math.round(ratio * 100);
+          const label = macroLabels[macro];
+
+          const currentValue = macro === 'carbs' ? customCarbs : macro === 'protein' ? customProtein : customFat;
+
+          return (
+            <div key={macro} className="macro-item">
+              <span className="macro-name">{label}</span>
+              <span className="macro-grams">{grams}g</span>
+              <span className="macro-multiply">*</span>
+              <span className="macro-conversion-rate">{caloriesPerGramValue} kcal/g</span>
+              <span className="macro-equals">=</span>
+              <span className="macro-calories">{calories} kcal</span>
+              <span className="macro-percentage">
+                ({percentage}%)
+                {selectedPreset === 'custom' && (
+                  <MacroControls
+                    setter={macro === 'carbs' ? setCustomCarbs : macro === 'protein' ? setCustomProtein : null}
+                    currentValue={currentValue}
+                    upDisabled={customCarbs + customProtein >= 100}
+                  />
+                )}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
 function App() {
   const [dailyCalories, setDailyCalories] = useState(() => {
     const savedCalories = localStorage.getItem('dailyCalories');
@@ -96,66 +187,18 @@ function App() {
     <div className="app">
       <main className="app-main">
         <div className="welcome-card">
-          <div className="calorie-input">
-            <label htmlFor="calories">Daily Calorie Goal</label>
-            <input
-              id="calories"
-              type="number"
-              value={dailyCalories}
-              onChange={(e) => setDailyCalories(Number(e.target.value))}
-            />
-            <span>kcal</span>
-          </div>
-
-          <div className="preset-selector">
-            <h3>Macronutrient Distribution</h3>
-            <div className="preset-buttons">
-              {Object.entries(macroPresets).map(([key, preset]) => (
-                <button
-                  key={key}
-                  className={`preset-button ${selectedPreset === key ? 'active' : ''}`}
-                  onClick={() => setSelectedPreset(key as PresetKey)}
-                >
-                  {preset.name}
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="macros-preview">
-            <h3>Macronutrient Goals</h3>
-            {(['carbs', 'protein', 'fat'] as const).map(macro => {
-              const ratio = currentMacros[macro];
-              const caloriesPerGramValue = caloriesPerGram[macro];
-              const grams = Math.round(dailyCalories * ratio / caloriesPerGramValue);
-              const calories = Math.round(dailyCalories * ratio);
-              const percentage = Math.round(ratio * 100);
-              const label = macroLabels[macro];
-
-              const currentValue = macro === 'carbs' ? customCarbs : macro === 'protein' ? customProtein : customFat;
-
-              return (
-                <div key={macro} className="macro-item">
-                  <span className="macro-name">{label}</span>
-                  <span className="macro-grams">{grams}g</span>
-                  <span className="macro-multiply">*</span>
-                  <span className="macro-conversion-rate">{caloriesPerGramValue} kcal/g</span>
-                  <span className="macro-equals">=</span>
-                  <span className="macro-calories">{calories} kcal</span>
-                  <span className="macro-percentage">
-                    ({percentage}%)
-                    {selectedPreset === 'custom' && (
-                      <MacroControls
-                        setter={macro === 'carbs' ? setCustomCarbs : macro === 'protein' ? setCustomProtein : null}
-                        currentValue={currentValue}
-                        upDisabled={customCarbs + customProtein >= 100}
-                      />
-                    )}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+          <EditGoals
+            dailyCalories={dailyCalories}
+            setDailyCalories={setDailyCalories}
+            selectedPreset={selectedPreset}
+            setSelectedPreset={setSelectedPreset}
+            customCarbs={customCarbs}
+            setCustomCarbs={setCustomCarbs}
+            customProtein={customProtein}
+            setCustomProtein={setCustomProtein}
+            customFat={customFat}
+            currentMacros={currentMacros}
+          />
         </div>
       </main>
     </div>
