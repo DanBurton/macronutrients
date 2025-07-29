@@ -29,6 +29,8 @@ function App() {
     localStorage.setItem('macroPreset', selectedPreset);
   }, [selectedPreset]);
 
+  const macroLabels = { carbs: 'Carbohydrates', protein: 'Protein', fat: 'Fat' };
+  const caloriesPerGram = { carbs: 4, protein: 4, fat: 9 };
   const currentMacros = macroPresets[selectedPreset];
 
   return (
@@ -71,33 +73,26 @@ function App() {
           
           <div className="macros-preview">
             <h3>Macronutrient Breakdown</h3>
-            <div className="macro-item">
-              <span className="macro-name">Carbs:</span>
-              <span className="macro-grams">{Math.round(dailyCalories * currentMacros.carbs / 4)}g</span>
-              <span className="macro-multiply">*</span>
-              <span className="macro-rate">4 kcal/g</span>
-              <span className="macro-equals">=</span>
-              <span className="macro-calories">{Math.round(dailyCalories * currentMacros.carbs)} kcal</span>
-              <span className="macro-percentage">({Math.round(currentMacros.carbs * 100)}%)</span>
-            </div>
-            <div className="macro-item">
-              <span className="macro-name">Protein:</span>
-              <span className="macro-grams">{Math.round(dailyCalories * currentMacros.protein / 4)}g</span>
-              <span className="macro-multiply">*</span>
-              <span className="macro-rate">4 kcal/g</span>
-              <span className="macro-equals">=</span>
-              <span className="macro-calories">{Math.round(dailyCalories * currentMacros.protein)} kcal</span>
-              <span className="macro-percentage">({Math.round(currentMacros.protein * 100)}%)</span>
-            </div>
-            <div className="macro-item">
-              <span className="macro-name">Fat:</span>
-              <span className="macro-grams">{Math.round(dailyCalories * currentMacros.fat / 9)}g</span>
-              <span className="macro-multiply">*</span>
-              <span className="macro-rate">9 kcal/g</span>
-              <span className="macro-equals">=</span>
-              <span className="macro-calories">{Math.round(dailyCalories * currentMacros.fat)} kcal</span>
-              <span className="macro-percentage">({Math.round(currentMacros.fat * 100)}%)</span>
-            </div>
+            {(['carbs', 'protein', 'fat'] as const).map(macro => {
+              const ratio = currentMacros[macro];
+              const caloriesPerGramValue = caloriesPerGram[macro];
+              const grams = Math.round(dailyCalories * ratio / caloriesPerGramValue);
+              const calories = Math.round(dailyCalories * ratio);
+              const percentage = Math.round(ratio * 100);
+              const label = macroLabels[macro];
+
+              return (
+                <div key={macro} className="macro-item">
+                  <span className="macro-name">{label}:</span>
+                  <span className="macro-grams">{grams}g</span>
+                  <span className="macro-multiply">*</span>
+                  <span className="macro-conversion-rate">{caloriesPerGramValue} kcal/g</span>
+                  <span className="macro-equals">=</span>
+                  <span className="macro-calories">{calories} kcal</span>
+                  <span className="macro-percentage">({percentage}%)</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </main>
