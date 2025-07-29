@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
+import MealPlanning, { type Meal } from './MealPlanning';
 
 // https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels
 const macroPresets = {
@@ -101,7 +102,7 @@ function EditGoals({
           ))}
         </div>
       </div>
-      
+
       <div className="macros-preview">
         <h3>Macronutrient Goals</h3>
         {(['carbs', 'protein', 'fat'] as const).map(macro => {
@@ -150,7 +151,7 @@ function GoalsSummary({ dailyCalories, currentMacros, setIsCollapsed }: GoalsSum
   const carbsGrams = Math.round(dailyCalories * currentMacros.carbs / caloriesPerGram.carbs);
   const proteinGrams = Math.round(dailyCalories * currentMacros.protein / caloriesPerGram.protein);
   const fatGrams = Math.round(dailyCalories * currentMacros.fat / caloriesPerGram.fat);
-  
+
   const carbsPercent = Math.round(currentMacros.carbs * 100);
   const proteinPercent = Math.round(currentMacros.protein * 100);
   const fatPercent = Math.round(currentMacros.fat * 100);
@@ -201,6 +202,11 @@ function App() {
     return saved ? Number(saved) : 30;
   });
 
+  const [meals, setMeals] = useState<Meal[]>(() => {
+    const saved = localStorage.getItem('meals');
+    return saved ? JSON.parse(saved) : [];
+  });
+
   useEffect(() => {
     localStorage.setItem('dailyCalories', dailyCalories.toString());
   }, [dailyCalories]);
@@ -220,6 +226,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem('isCollapsed', JSON.stringify(isCollapsed));
   }, [isCollapsed]);
+
+  useEffect(() => {
+    localStorage.setItem('meals', JSON.stringify(meals));
+  }, [meals]);
 
   const customFat = Math.max(0, 100 - customCarbs - customProtein);
 
@@ -259,6 +269,15 @@ function App() {
               </button>
             </>
           )}
+        </div>
+
+        <div className="welcome-card">
+          <MealPlanning
+            meals={meals}
+            setMeals={setMeals}
+            dailyCalories={dailyCalories}
+            currentMacros={currentMacros}
+          />
         </div>
       </main>
     </div>
