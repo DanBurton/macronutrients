@@ -85,6 +85,47 @@
   color: #bdc3c7;
 }
 
+.preset-selector {
+  margin: 1.5rem 0;
+}
+
+.preset-selector h3 {
+  color: #ecf0f1;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.preset-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.preset-button {
+  padding: 0.75rem 1rem;
+  border: 2px solid #34495e;
+  border-radius: 8px;
+  background: #34495e;
+  color: #bdc3c7;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.preset-button:hover {
+  border-color: #4CAF50;
+  color: #ecf0f1;
+}
+
+.preset-button.active {
+  background: #4CAF50;
+  border-color: #4CAF50;
+  color: #ffffff;
+  font-weight: bold;
+}
+
 .macros-preview {
   margin-top: 2rem;
   text-align: left;
@@ -100,8 +141,9 @@
 }
 
 .macro-item {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 80px 60px 20px 80px 20px 100px 60px;
+  gap: 0.5rem;
   align-items: center;
   padding: 0.75rem;
   background: #34495e;
@@ -109,11 +151,46 @@
   border-radius: 8px;
   border-left: 4px solid #4CAF50;
   color: #ecf0f1;
+  font-family: 'Courier New', monospace;
 }
 
-.macro-item small {
+.macro-name {
+  color: #ecf0f1;
+  font-weight: 500;
+}
+
+.macro-grams {
+  text-align: right;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.macro-multiply {
+  text-align: center;
   color: #bdc3c7;
-  font-size: 0.8rem;
+}
+
+.macro-rate {
+  text-align: center;
+  color: #95a5a6;
+}
+
+.macro-equals {
+  text-align: center;
+  color: #bdc3c7;
+}
+
+.macro-calories {
+  text-align: right;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.macro-percentage {
+  text-align: left;
+  color: #4CAF50;
+  font-weight: bold;
+  font-size: 1.1em;
 }
 
 @media (max-width: 768px) {
