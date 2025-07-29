@@ -33,7 +33,18 @@ carbs: 4 kcal/g
 protein: 4kcal/g
 fat: 9 kcal/g
 
+
 # architecture
 
 A frontend-only react app deployed to gh pages.
 Uses browser local storage for persistence.
+
+# commands ran
+
+```bash
+npx create-vite@latest . --template react-ts
+cp README.md README-vite.md
+# manually ctrl+z to get this README back
+npm install
+npm run dev
+```

@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>🥗 Macronutrients Tracker</h1>
+        <h1>Macronutrients Tracker</h1>
         <p>Plan and track your daily nutrition</p>
       </header>
       
@@ -44,17 +44,6 @@ function App() {
               <small>9 kcal/g</small>
             </div>
           </div>
-        </div>
-        
-        <div className="coming-soon">
-          <h3>Coming Soon:</h3>
-          <ul>
-            <li>✅ Set custom macronutrient goals</li>
-            <li>✅ Plan meals and snacks</li>
-            <li>✅ Track daily intake</li>
-            <li>✅ View nutritional dashboard</li>
-            <li>✅ Ingredient-based meal planning</li>
-          </ul>
         </div>
       </main>
     </div>
