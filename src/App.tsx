@@ -116,7 +116,7 @@ function EditGoals({
           const currentValue = macro === 'carbs' ? customCarbs : macro === 'protein' ? customProtein : customFat;
 
           return (
-            <div key={macro} className="macro-item">
+            <div key={macro} className="macro-item" data-macro={macro}>
               <span className="macro-name">{label}</span>
               <span className="macro-grams">{grams}g</span>
               <span className="macro-multiply">*</span>
@@ -160,10 +160,10 @@ function GoalsSummary({ dailyCalories, currentMacros, setIsCollapsed }: GoalsSum
     <div className="goals-summary">
       <div className="summary-single-line">
         <span className="summary-macros-grams">
-          {carbsGrams}g carbs / {proteinGrams}g protein / {fatGrams}g fat
+          <span className="carbs-remaining">{carbsGrams}g carbs</span> / <span className="protein-remaining">{proteinGrams}g protein</span> / <span className="fat-remaining">{fatGrams}g fat</span>
         </span>
         <span className="summary-calories-and-distribution">
-          {dailyCalories} kcal ({carbsPercent}/{proteinPercent}/{fatPercent})
+          <span className="calories-remaining">{dailyCalories} kcal</span> (<span className="carbs-remaining">{carbsPercent}</span>/<span className="protein-remaining">{proteinPercent}</span>/<span className="fat-remaining">{fatPercent}</span>)
         </span>
         <button
           className="collapse-button settings-cog"

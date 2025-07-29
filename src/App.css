@@ -129,9 +129,21 @@
   background: #34495e;
   margin-bottom: 0.5rem;
   border-radius: 8px;
-  border-left: 4px solid #4CAF50;
+  border-left: 4px solid var(--macro-color, #4CAF50);
   color: #ecf0f1;
   font-family: 'Courier New', monospace;
+}
+
+.macro-item[data-macro="carbs"] {
+  --macro-color: #4CAF50;
+}
+
+.macro-item[data-macro="protein"] {
+  --macro-color: #FF5722;
+}
+
+.macro-item[data-macro="fat"] {
+  --macro-color: #FFC107;
 }
 
 .macro-name {
@@ -142,7 +154,7 @@
 .macro-grams {
   text-align: right;
   font-weight: bold;
-  color: #4CAF50;
+  color: var(--macro-color, #4CAF50);
 }
 
 .macro-multiply {
@@ -164,7 +176,7 @@
 .macro-calories {
   text-align: right;
   font-weight: bold;
-  color: #4CAF50;
+  color: var(--macro-color, #4CAF50);
 }
 
 .macro-percentage {
@@ -275,7 +287,6 @@
 .summary-macros-grams {
   font-size: 1.1rem;
   font-weight: bold;
-  color: #7fb069;
 }
 
 .summary-calories-and-distribution {
@@ -520,23 +531,23 @@
 }
 
 .carbs-fill {
-  --fill-color: #f39c12;
-  --fill-color-light: #f1c40f;
+  --fill-color: #4CAF50;
+  --fill-color-light: #66BB6A;
 }
 
 .protein-fill {
-  --fill-color: #3498db;
-  --fill-color-light: #5dade2;
+  --fill-color: #FF5722;
+  --fill-color-light: #FF7043;
 }
 
 .fat-fill {
-  --fill-color: #9b59b6;
-  --fill-color-light: #bb8fce;
+  --fill-color: #FFC107;
+  --fill-color-light: #FFCA28;
 }
 
 .calories-fill {
-  --fill-color: #27ae60;
-  --fill-color-light: #58d68d;
+  --fill-color: #2196F3;
+  --fill-color-light: #42A5F5;
 }
 
 .summary-totals {
@@ -555,31 +566,26 @@
   font-size: 0.9rem;
 }
 
-.total-row span:first-child,
-.goal-row span:first-child,
-.remaining-row span:first-child {
+.remaining-row-label {
   font-weight: bold;
   color: #ecf0f1;
 }
 
-.total-row span:nth-child(2) {
-  color: #3498db;
+/* Color-coded remaining macros text */
+.carbs-remaining {
+  color: #4CAF50;
 }
 
-.goal-row span:nth-child(2) {
-  color: #95a5a6;
+.protein-remaining {
+  color: #FF5722;
 }
 
-.remaining-row span:nth-child(2) {
-  color: #f39c12;
+.fat-remaining {
+  color: #FFC107;
 }
 
-.over-goal {
-  color: #e74c3c !important;
-}
-
-.under-goal {
-  color: #27ae60 !important;
+.calories-remaining {
+  color: #2196F3;
 }
 
 @media (max-width: 768px) {

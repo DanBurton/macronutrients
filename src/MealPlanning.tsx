@@ -13,6 +13,43 @@ interface MealPlanningProps {
     currentMacros: { carbs: number; protein: number; fat: number };
 }
 
+interface MacroBarProps {
+    label: string;
+    current: number;
+    goal: number;
+    unit: string;
+    colorClass: string;
+}
+
+function MacroBar({ label, current, goal, unit, colorClass }: MacroBarProps) {
+    const percentage = Math.min((current / goal) * 100, 100);
+    const overflowPercentage = current > goal ? Math.min(((current - goal) / goal) * 100, 100) : 0;
+    const percentDV = Math.round((current / goal) * 100);
+
+    return (
+        <div className="macro-chart">
+            <div className="macro-chart-header">
+                <span className="macro-label">{label}</span>
+                <span className="macro-values">
+                    {Math.round(current)}{unit} / {Math.round(goal)}{unit} ({percentDV}% DV)
+                </span>
+            </div>
+            <div className="progress-bar">
+                <div
+                    className={`progress-fill ${colorClass}`}
+                    style={{ width: `${percentage}%` }}
+                ></div>
+                {current > goal && (
+                    <div
+                        className="progress-overflow"
+                        style={{ width: `${overflowPercentage}%` }}
+                    ></div>
+                )}
+            </div>
+        </div>
+    );
+}
+
 function MealPlanning({ meals, setMeals, dailyCalories, currentMacros }: MealPlanningProps) {
     const addMeal = () => {
         const newMeal: Meal = {
@@ -120,110 +157,45 @@ function MealPlanning({ meals, setMeals, dailyCalories, currentMacros }: MealPla
             {meals.length > 0 && (
                 <div className="meal-summary">
                     <div className="summary-charts">
-                        {/* Carbs Bar Chart */}
-                        <div className="macro-chart">
-                            <div className="macro-chart-header">
-                                <span className="macro-label">Carbs</span>
-                                <span className="macro-values">
-                                    {totalMacros.carbs}g / {goalCarbs}g
-                                </span>
-                            </div>
-                            <div className="progress-bar">
-                                <div
-                                    className="progress-fill carbs-fill"
-                                    style={{ width: `${Math.min((totalMacros.carbs / goalCarbs) * 100, 100)}%` }}
-                                ></div>
-                                {totalMacros.carbs > goalCarbs && (
-                                    <div
-                                        className="progress-overflow"
-                                        style={{ width: `${Math.min(((totalMacros.carbs - goalCarbs) / goalCarbs) * 100, 100)}%` }}
-                                    ></div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Protein Bar Chart */}
-                        <div className="macro-chart">
-                            <div className="macro-chart-header">
-                                <span className="macro-label">Protein</span>
-                                <span className="macro-values">
-                                    {totalMacros.protein}g / {goalProtein}g
-                                </span>
-                            </div>
-                            <div className="progress-bar">
-                                <div
-                                    className="progress-fill protein-fill"
-                                    style={{ width: `${Math.min((totalMacros.protein / goalProtein) * 100, 100)}%` }}
-                                ></div>
-                                {totalMacros.protein > goalProtein && (
-                                    <div
-                                        className="progress-overflow"
-                                        style={{ width: `${Math.min(((totalMacros.protein - goalProtein) / goalProtein) * 100, 100)}%` }}
-                                    ></div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Fat Bar Chart */}
-                        <div className="macro-chart">
-                            <div className="macro-chart-header">
-                                <span className="macro-label">Fat</span>
-                                <span className="macro-values">
-                                    {totalMacros.fat}g / {goalFat}g
-                                </span>
-                            </div>
-                            <div className="progress-bar">
-                                <div
-                                    className="progress-fill fat-fill"
-                                    style={{ width: `${Math.min((totalMacros.fat / goalFat) * 100, 100)}%` }}
-                                ></div>
-                                {totalMacros.fat > goalFat && (
-                                    <div
-                                        className="progress-overflow"
-                                        style={{ width: `${Math.min(((totalMacros.fat - goalFat) / goalFat) * 100, 100)}%` }}
-                                    ></div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Calories Bar Chart */}
-                        <div className="macro-chart">
-                            <div className="macro-chart-header">
-                                <span className="macro-label">Calories</span>
-                                <span className="macro-values">
-                                    {Math.round(totalCalories)} / {dailyCalories} kcal
-                                </span>
-                            </div>
-                            <div className="progress-bar">
-                                <div
-                                    className="progress-fill calories-fill"
-                                    style={{ width: `${Math.min((totalCalories / dailyCalories) * 100, 100)}%` }}
-                                ></div>
-                                {totalCalories > dailyCalories && (
-                                    <div
-                                        className="progress-overflow"
-                                        style={{ width: `${Math.min(((totalCalories - dailyCalories) / dailyCalories) * 100, 100)}%` }}
-                                    ></div>
-                                )}
-                            </div>
-                        </div>
+                        <MacroBar
+                            label="Carbs"
+                            current={totalMacros.carbs}
+                            goal={goalCarbs}
+                            unit="g"
+                            colorClass="carbs-fill"
+                        />
+                        <MacroBar
+                            label="Protein"
+                            current={totalMacros.protein}
+                            goal={goalProtein}
+                            unit="g"
+                            colorClass="protein-fill"
+                        />
+                        <MacroBar
+                            label="Fat"
+                            current={totalMacros.fat}
+                            goal={goalFat}
+                            unit="g"
+                            colorClass="fat-fill"
+                        />
+                        <MacroBar
+                            label="Calories"
+                            current={totalCalories}
+                            goal={dailyCalories}
+                            unit=" kcal"
+                            colorClass="calories-fill"
+                        />
                     </div>
 
                     <div className="summary-totals">
-                        <div className="total-row">
-                            <span>Total:</span>
-                            <span>{totalMacros.carbs}g carbs / {totalMacros.protein}g protein / {totalMacros.fat}g fat</span>
-                            <span>{Math.round(totalCalories)} kcal</span>
-                        </div>
-                        <div className="goal-row">
-                            <span>Goal:</span>
-                            <span>{goalCarbs}g carbs / {goalProtein}g protein / {goalFat}g fat</span>
-                            <span>{dailyCalories} kcal</span>
-                        </div>
                         <div className="remaining-row">
-                            <span>Remaining:</span>
-                            <span>{goalCarbs - totalMacros.carbs}g carbs / {goalProtein - totalMacros.protein}g protein / {goalFat - totalMacros.fat}g fat</span>
-                            <span className={remainingCalories < 0 ? 'over-goal' : 'under-goal'}>
+                            <span className="remaining-row-label">Remaining:</span>
+                            <span>
+                                <span className="carbs-remaining">{goalCarbs - totalMacros.carbs}g carbs</span> /
+                                <span className="protein-remaining"> {goalProtein - totalMacros.protein}g protein</span> /
+                                <span className="fat-remaining"> {goalFat - totalMacros.fat}g fat</span>
+                            </span>
+                            <span className="calories-remaining">
                                 {remainingCalories > 0 ? '+' : ''}{Math.round(remainingCalories)} kcal
                             </span>
                         </div>
