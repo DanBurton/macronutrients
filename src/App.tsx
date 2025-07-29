@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 
 function App() {
-  const [dailyCalories, setDailyCalories] = useState(2000)
+  const [dailyCalories, setDailyCalories] = useState(2000);
 
   return (
     <div className="app">
@@ -23,8 +23,6 @@ function App() {
               type="number"
               value={dailyCalories}
               onChange={(e) => setDailyCalories(Number(e.target.value))}
-              min="1000"
-              max="5000"
             />
             <span>kcal</span>
           </div>
@@ -47,7 +45,7 @@ function App() {
         </div>
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
