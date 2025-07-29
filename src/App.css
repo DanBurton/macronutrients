@@ -1,0 +1,137 @@
+.app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.app-header {
+  margin-bottom: 3rem;
+}
+
+.app-header h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  color: #2d5a27;
+}
+
+.app-header p {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.welcome-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.welcome-card h2 {
+  color: #2d5a27;
+  margin-bottom: 1rem;
+}
+
+.calorie-input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.calorie-input label {
+  font-weight: bold;
+  color: #333;
+}
+
+.calorie-input input {
+  padding: 0.5rem;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100px;
+  text-align: center;
+}
+
+.calorie-input input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.macros-preview {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.macros-preview h3 {
+  color: #2d5a27;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.macro-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: white;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #4CAF50;
+}
+
+.macro-item small {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.coming-soon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.coming-soon h3 {
+  margin-bottom: 1rem;
+}
+
+.coming-soon ul {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.coming-soon li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.coming-soon li:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding: 1rem;
+  }
+  
+  .app-header h1 {
+    font-size: 2rem;
+  }
+  
+  .calorie-input {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
