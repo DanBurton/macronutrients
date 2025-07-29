@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 
+// https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels
 const macroPresets = {
-  balanced: { name: 'Balanced', carbs: 0.45, protein: 0.25, fat: 0.30 },
-  highProtein: { name: 'High Protein', carbs: 0.35, protein: 0.35, fat: 0.30 },
-  lowCarb: { name: 'Low Carb', carbs: 0.20, protein: 0.30, fat: 0.50 },
   athletic: { name: 'Athletic', carbs: 0.55, protein: 0.25, fat: 0.20 },
+  usda: { name: 'USDA Food Labels', carbs: 0.55, protein: 0.10, fat: 0.35 },
+  balanced: { name: 'Balanced', carbs: 0.45, protein: 0.25, fat: 0.30 },
+  highProtein: { name: 'High Protein', carbs: 0.30, protein: 0.40, fat: 0.30 },
+  lowCarb: { name: 'Low Carb', carbs: 0.20, protein: 0.30, fat: 0.50 },
+  keto: { name: 'Keto', carbs: 0.05, protein: 0.20, fat: 0.75 },
 } as const;
 
 type PresetKey = keyof typeof macroPresets;
+
+const macroLabels = { carbs: 'Carbs', protein: 'Protein', fat: 'Fat' };
+const caloriesPerGram = { carbs: 4, protein: 4, fat: 9 };
 
 function App() {
   const [dailyCalories, setDailyCalories] = useState(() => {
@@ -29,24 +35,14 @@ function App() {
     localStorage.setItem('macroPreset', selectedPreset);
   }, [selectedPreset]);
 
-  const macroLabels = { carbs: 'Carbohydrates', protein: 'Protein', fat: 'Fat' };
-  const caloriesPerGram = { carbs: 4, protein: 4, fat: 9 };
   const currentMacros = macroPresets[selectedPreset];
 
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>Macronutrients Tracker</h1>
-        <p>Plan and track your daily nutrition</p>
-      </header>
-      
       <main className="app-main">
         <div className="welcome-card">
-          <h2>Welcome to your nutrition planner!</h2>
-          <p>Set your daily calorie goal to get started:</p>
-          
           <div className="calorie-input">
-            <label htmlFor="calories">Daily Calorie Goal:</label>
+            <label htmlFor="calories">Daily Calorie Goal</label>
             <input
               id="calories"
               type="number"
@@ -57,7 +53,7 @@ function App() {
           </div>
 
           <div className="preset-selector">
-            <h3>Macronutrient Distribution:</h3>
+            <h3>Macronutrient Distribution</h3>
             <div className="preset-buttons">
               {Object.entries(macroPresets).map(([key, preset]) => (
                 <button
@@ -72,7 +68,7 @@ function App() {
           </div>
           
           <div className="macros-preview">
-            <h3>Macronutrient Breakdown</h3>
+            <h3>Macronutrient Goals</h3>
             {(['carbs', 'protein', 'fat'] as const).map(macro => {
               const ratio = currentMacros[macro];
               const caloriesPerGramValue = caloriesPerGram[macro];
@@ -83,7 +79,7 @@ function App() {
 
               return (
                 <div key={macro} className="macro-item">
-                  <span className="macro-name">{label}:</span>
+                  <span className="macro-name">{label}</span>
                   <span className="macro-grams">{grams}g</span>
                   <span className="macro-multiply">*</span>
                   <span className="macro-conversion-rate">{caloriesPerGramValue} kcal/g</span>
