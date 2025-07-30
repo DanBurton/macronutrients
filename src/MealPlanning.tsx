@@ -23,7 +23,8 @@ interface MacroBarProps {
 
 function MacroBar({ label, current, goal, unit, colorClass }: MacroBarProps) {
     const percentage = Math.min((current / goal) * 100, 100);
-    const overflowPercentage = current > goal ? Math.min(((current - goal) / goal) * 100, 100) : 0;
+    const overflowPercentage
+        = current > goal ? Math.min(((current - goal) / goal) * 100, 100) : 0;
     const percentDV = Math.round((current / goal) * 100);
 
     return (
@@ -31,7 +32,9 @@ function MacroBar({ label, current, goal, unit, colorClass }: MacroBarProps) {
             <div className="macro-chart-header">
                 <span className="macro-label">{label}</span>
                 <span className="macro-values">
-                    {Math.round(current)}{unit} / {Math.round(goal)}{unit} ({percentDV}% DV)
+                    {Math.round(current)}
+                    {unit} / {Math.round(goal)}
+                    {unit} ({percentDV}% DV)
                 </span>
             </div>
             <div className="progress-bar">
@@ -50,43 +53,55 @@ function MacroBar({ label, current, goal, unit, colorClass }: MacroBarProps) {
     );
 }
 
-function MealPlanning({ meals, setMeals, dailyCalories, currentMacros }: MealPlanningProps) {
+function MealPlanning({
+    meals,
+    setMeals,
+    dailyCalories,
+    currentMacros,
+}: MealPlanningProps) {
     const addMeal = () => {
         const newMeal: Meal = {
             id: Date.now(),
             name: `Meal ${meals.length + 1}`,
             carbs: 0,
             protein: 0,
-            fat: 0
+            fat: 0,
         };
         setMeals([...meals, newMeal]);
     };
 
-    const updateMeal = (id: number, field: keyof Omit<Meal, 'id'>, value: string | number) => {
-        setMeals(meals.map(meal =>
-            meal.id === id ? { ...meal, [field]: value } : meal
-        ));
+    const updateMeal = (
+        id: number,
+        field: keyof Omit<Meal, 'id'>,
+        value: string | number
+    ) => {
+        setMeals(
+            meals.map((meal) =>
+                meal.id === id ? { ...meal, [field]: value } : meal
+            )
+        );
     };
 
     const deleteMeal = (id: number) => {
-        setMeals(meals.filter(meal => meal.id !== id));
+        setMeals(meals.filter((meal) => meal.id !== id));
     };
 
     const totalMacros = meals.reduce(
         (total, meal) => ({
             carbs: total.carbs + meal.carbs,
             protein: total.protein + meal.protein,
-            fat: total.fat + meal.fat
+            fat: total.fat + meal.fat,
         }),
         { carbs: 0, protein: 0, fat: 0 }
     );
 
-    const totalCalories = totalMacros.carbs * 4 + totalMacros.protein * 4 + totalMacros.fat * 9;
+    const totalCalories
+        = totalMacros.carbs * 4 + totalMacros.protein * 4 + totalMacros.fat * 9;
     const remainingCalories = dailyCalories - totalCalories;
 
-    const goalCarbs = Math.round(dailyCalories * currentMacros.carbs / 4);
-    const goalProtein = Math.round(dailyCalories * currentMacros.protein / 4);
-    const goalFat = Math.round(dailyCalories * currentMacros.fat / 9);
+    const goalCarbs = Math.round((dailyCalories * currentMacros.carbs) / 4);
+    const goalProtein = Math.round((dailyCalories * currentMacros.protein) / 4);
+    const goalFat = Math.round((dailyCalories * currentMacros.fat) / 9);
 
     return (
         <div className="meal-planning">
@@ -99,12 +114,14 @@ function MealPlanning({ meals, setMeals, dailyCalories, currentMacros }: MealPla
 
             {meals.length > 0 && (
                 <div className="meals-list">
-                    {meals.map(meal => (
+                    {meals.map((meal) => (
                         <div key={meal.id} className="meal-row">
                             <input
                                 type="text"
                                 value={meal.name}
-                                onChange={(e) => updateMeal(meal.id, 'name', e.target.value)}
+                                onChange={(e) =>
+                                    updateMeal(meal.id, 'name', e.target.value)
+                                }
                                 className="meal-name-input"
                                 placeholder="Meal name"
                             />
@@ -114,7 +131,13 @@ function MealPlanning({ meals, setMeals, dailyCalories, currentMacros }: MealPla
                                     <input
                                         type="number"
                                         value={meal.carbs || ''}
-                                        onChange={(e) => updateMeal(meal.id, 'carbs', Number(e.target.value) || 0)}
+                                        onChange={(e) =>
+                                            updateMeal(
+                                                meal.id,
+                                                'carbs',
+                                                Number(e.target.value) || 0
+                                            )
+                                        }
                                         className="macro-value-input"
                                         placeholder="0"
                                     />
@@ -125,7 +148,13 @@ function MealPlanning({ meals, setMeals, dailyCalories, currentMacros }: MealPla
                                     <input
                                         type="number"
                                         value={meal.protein || ''}
-                                        onChange={(e) => updateMeal(meal.id, 'protein', Number(e.target.value) || 0)}
+                                        onChange={(e) =>
+                                            updateMeal(
+                                                meal.id,
+                                                'protein',
+                                                Number(e.target.value) || 0
+                                            )
+                                        }
                                         className="macro-value-input"
                                         placeholder="0"
                                     />
@@ -136,7 +165,13 @@ function MealPlanning({ meals, setMeals, dailyCalories, currentMacros }: MealPla
                                     <input
                                         type="number"
                                         value={meal.fat || ''}
-                                        onChange={(e) => updateMeal(meal.id, 'fat', Number(e.target.value) || 0)}
+                                        onChange={(e) =>
+                                            updateMeal(
+                                                meal.id,
+                                                'fat',
+                                                Number(e.target.value) || 0
+                                            )
+                                        }
                                         className="macro-value-input"
                                         placeholder="0"
                                     />
@@ -189,14 +224,27 @@ function MealPlanning({ meals, setMeals, dailyCalories, currentMacros }: MealPla
 
                     <div className="summary-totals">
                         <div className="remaining-row">
-                            <span className="remaining-row-label">Remaining:</span>
+                            <span className="remaining-row-label">
+                                Remaining:
+                            </span>
                             <span>
-                                <span className="carbs-remaining">{goalCarbs - totalMacros.carbs}g carbs</span> /
-                                <span className="protein-remaining"> {goalProtein - totalMacros.protein}g protein</span> /
-                                <span className="fat-remaining"> {goalFat - totalMacros.fat}g fat</span>
+                                <span className="carbs-remaining">
+                                    {goalCarbs - totalMacros.carbs}g carbs
+                                </span>{' '}
+                                /
+                                <span className="protein-remaining">
+                                    {' '}
+                                    {goalProtein - totalMacros.protein}g protein
+                                </span>{' '}
+                                /
+                                <span className="fat-remaining">
+                                    {' '}
+                                    {goalFat - totalMacros.fat}g fat
+                                </span>
                             </span>
                             <span className="calories-remaining">
-                                {remainingCalories > 0 ? '+' : ''}{Math.round(remainingCalories)} kcal
+                                {remainingCalories > 0 ? '+' : ''}
+                                {Math.round(remainingCalories)} kcal
                             </span>
                         </div>
                     </div>
