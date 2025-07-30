@@ -23,8 +23,8 @@ interface MacroBarProps {
 
 function MacroBar({ label, current, goal, unit, colorClass }: MacroBarProps) {
     const percentage = Math.min((current / goal) * 100, 100);
-    const overflowPercentage
-        = current > goal ? Math.min(((current - goal) / goal) * 100, 100) : 0;
+    const overflowPercentage =
+        current > goal ? Math.min(((current - goal) / goal) * 100, 100) : 0;
     const percentDV = Math.round((current / goal) * 100);
 
     return (
@@ -95,8 +95,8 @@ function MealPlanning({
         { carbs: 0, protein: 0, fat: 0 }
     );
 
-    const totalCalories
-        = totalMacros.carbs * 4 + totalMacros.protein * 4 + totalMacros.fat * 9;
+    const totalCalories =
+        totalMacros.carbs * 4 + totalMacros.protein * 4 + totalMacros.fat * 9;
     const remainingCalories = dailyCalories - totalCalories;
 
     const goalCarbs = Math.round((dailyCalories * currentMacros.carbs) / 4);

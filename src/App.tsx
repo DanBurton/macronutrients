@@ -4,14 +4,14 @@ import MealPlanning, { type Meal } from './MealPlanning';
 
 // https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels
 const macroPresets = {
-    athletic: { name: 'Athletic', carbs: 0.55, protein: 0.25, fat: 0.20 },
-    usda: { name: 'USDA Food Labels', carbs: 0.55, protein: 0.10, fat: 0.35 },
-    balanced: { name: 'Balanced', carbs: 0.45, protein: 0.25, fat: 0.30 },
-    zone: { name: '40 30 30', carbs: 0.40, protein: 0.30, fat: 0.30 },
-    highProtein: { name: 'High Protein', carbs: 0.30, protein: 0.40, fat: 0.30 },
-    lowCarb: { name: 'Low Carb', carbs: 0.20, protein: 0.30, fat: 0.50 },
-    keto: { name: 'Keto', carbs: 0.05, protein: 0.20, fat: 0.75 },
-    custom: { name: 'Custom', carbs: 0.40, protein: 0.30, fat: 0.30 },
+    athletic: { name: 'Athletic', carbs: 0.55, protein: 0.25, fat: 0.2 },
+    usda: { name: 'USDA Food Labels', carbs: 0.55, protein: 0.1, fat: 0.35 },
+    balanced: { name: 'Balanced', carbs: 0.45, protein: 0.25, fat: 0.3 },
+    zone: { name: '40 30 30', carbs: 0.4, protein: 0.3, fat: 0.3 },
+    highProtein: { name: 'High Protein', carbs: 0.3, protein: 0.4, fat: 0.3 },
+    lowCarb: { name: 'Low Carb', carbs: 0.2, protein: 0.3, fat: 0.5 },
+    keto: { name: 'Keto', carbs: 0.05, protein: 0.2, fat: 0.75 },
+    custom: { name: 'Custom', carbs: 0.4, protein: 0.3, fat: 0.3 },
 } as const;
 
 type PresetKey = keyof typeof macroPresets;
@@ -25,7 +25,11 @@ interface MacroControlsProps {
     upDisabled?: boolean;
 }
 
-function MacroControls({ setter, currentValue, upDisabled }: MacroControlsProps) {
+function MacroControls({
+    setter,
+    currentValue,
+    upDisabled,
+}: MacroControlsProps) {
     if (!setter) {
         return (
             <div className="inline-controls">
@@ -38,14 +42,22 @@ function MacroControls({ setter, currentValue, upDisabled }: MacroControlsProps)
         <div className="inline-controls">
             <button
                 className="inline-button"
-                onClick={() => { setter(currentValue + 1); }}
+                onClick={() => {
+                    setter(currentValue + 1);
+                }}
                 disabled={upDisabled}
-            >+</button>
+            >
+                +
+            </button>
             <button
                 className="inline-button minus"
-                onClick={() => { setter(currentValue - 1); }}
+                onClick={() => {
+                    setter(currentValue - 1);
+                }}
                 disabled={currentValue <= 0}
-            >−</button>
+            >
+                −
+            </button>
         </div>
     );
 }
@@ -73,7 +85,7 @@ function EditGoals({
     customProtein,
     setCustomProtein,
     customFat,
-    currentMacros
+    currentMacros,
 }: EditGoalsProps) {
     return (
         <>
@@ -105,27 +117,39 @@ function EditGoals({
 
             <div className="macros-preview">
                 <h3>Macronutrient Goals</h3>
-                {(['carbs', 'protein', 'fat'] as const).map(macro => {
+                {(['carbs', 'protein', 'fat'] as const).map((macro) => {
                     const ratio = currentMacros[macro];
                     const caloriesPerGramValue = caloriesPerGram[macro];
-                    const grams = Math.round(dailyCalories * ratio / caloriesPerGramValue);
+                    const grams = Math.round(
+                        (dailyCalories * ratio) / caloriesPerGramValue
+                    );
                     const calories = Math.round(dailyCalories * ratio);
                     const percentage = Math.round(ratio * 100);
                     const label = macroLabels[macro];
 
-                    const [setter, currentValue]
-                        = macro === 'carbs' ? [setCustomCarbs, customCarbs]
-                        : macro === 'protein' ? [setCustomProtein, customProtein]
-                        : [null, customFat];
+                    const [setter, currentValue] =
+                        macro === 'carbs'
+                            ? [setCustomCarbs, customCarbs]
+                            : macro === 'protein'
+                              ? [setCustomProtein, customProtein]
+                              : [null, customFat];
 
                     return (
-                        <div key={macro} className="macro-item" data-macro={macro}>
+                        <div
+                            key={macro}
+                            className="macro-item"
+                            data-macro={macro}
+                        >
                             <span className="macro-name">{label}</span>
                             <span className="macro-grams">{grams}g</span>
                             <span className="macro-multiply">*</span>
-                            <span className="macro-conversion-rate">{caloriesPerGramValue} kcal/g</span>
+                            <span className="macro-conversion-rate">
+                                {caloriesPerGramValue} kcal/g
+                            </span>
                             <span className="macro-equals">=</span>
-                            <span className="macro-calories">{calories} kcal</span>
+                            <span className="macro-calories">
+                                {calories} kcal
+                            </span>
                             <span className="macro-percentage">
                                 ({percentage}%)
                             </span>
@@ -133,7 +157,9 @@ function EditGoals({
                                 <MacroControls
                                     setter={setter}
                                     currentValue={currentValue}
-                                    upDisabled={customCarbs + customProtein >= 100}
+                                    upDisabled={
+                                        customCarbs + customProtein >= 100
+                                    }
                                 />
                             )}
                         </div>
@@ -150,10 +176,20 @@ interface GoalsSummaryProps {
     setIsCollapsed: (collapsed: boolean) => void;
 }
 
-function GoalsSummary({ dailyCalories, currentMacros, setIsCollapsed }: GoalsSummaryProps) {
-    const carbsGrams = Math.round(dailyCalories * currentMacros.carbs / caloriesPerGram.carbs);
-    const proteinGrams = Math.round(dailyCalories * currentMacros.protein / caloriesPerGram.protein);
-    const fatGrams = Math.round(dailyCalories * currentMacros.fat / caloriesPerGram.fat);
+function GoalsSummary({
+    dailyCalories,
+    currentMacros,
+    setIsCollapsed,
+}: GoalsSummaryProps) {
+    const carbsGrams = Math.round(
+        (dailyCalories * currentMacros.carbs) / caloriesPerGram.carbs
+    );
+    const proteinGrams = Math.round(
+        (dailyCalories * currentMacros.protein) / caloriesPerGram.protein
+    );
+    const fatGrams = Math.round(
+        (dailyCalories * currentMacros.fat) / caloriesPerGram.fat
+    );
 
     const carbsPercent = Math.round(currentMacros.carbs * 100);
     const proteinPercent = Math.round(currentMacros.protein * 100);
@@ -163,10 +199,20 @@ function GoalsSummary({ dailyCalories, currentMacros, setIsCollapsed }: GoalsSum
         <div className="goals-summary">
             <div className="summary-single-line">
                 <span className="summary-macros-grams">
-                    <span className="carbs-remaining">{carbsGrams}g carbs</span> / <span className="protein-remaining">{proteinGrams}g protein</span> / <span className="fat-remaining">{fatGrams}g fat</span>
+                    <span className="carbs-remaining">{carbsGrams}g carbs</span>{' '}
+                    /{' '}
+                    <span className="protein-remaining">
+                        {proteinGrams}g protein
+                    </span>{' '}
+                    / <span className="fat-remaining">{fatGrams}g fat</span>
                 </span>
                 <span className="summary-calories-and-distribution">
-                    <span className="calories-remaining">{dailyCalories} kcal</span> (<span className="carbs-remaining">{carbsPercent}</span>/<span className="protein-remaining">{proteinPercent}</span>/<span className="fat-remaining">{fatPercent}</span>)
+                    <span className="calories-remaining">
+                        {dailyCalories} kcal
+                    </span>{' '}
+                    (<span className="carbs-remaining">{carbsPercent}</span>/
+                    <span className="protein-remaining">{proteinPercent}</span>/
+                    <span className="fat-remaining">{fatPercent}</span>)
                 </span>
                 <button
                     className="collapse-button settings-cog"
@@ -187,7 +233,9 @@ function App() {
 
     const [selectedPreset, setSelectedPreset] = useState<PresetKey>(() => {
         const savedPreset = localStorage.getItem('macroPreset') as PresetKey;
-        return savedPreset && savedPreset in macroPresets ? savedPreset : 'balanced';
+        return savedPreset && savedPreset in macroPresets
+            ? savedPreset
+            : 'balanced';
     });
 
     const [isCollapsed, setIsCollapsed] = useState(() => {
@@ -236,9 +284,14 @@ function App() {
 
     const customFat = Math.max(0, 100 - customCarbs - customProtein);
 
-    const currentMacros = selectedPreset === 'custom'
-        ? { carbs: customCarbs / 100, protein: customProtein / 100, fat: customFat / 100 }
-        : macroPresets[selectedPreset];
+    const currentMacros =
+        selectedPreset === 'custom'
+            ? {
+                  carbs: customCarbs / 100,
+                  protein: customProtein / 100,
+                  fat: customFat / 100,
+              }
+            : macroPresets[selectedPreset];
 
     return (
         <div className="app">
