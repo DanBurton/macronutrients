@@ -49,6 +49,20 @@ Uses browser local storage for persistence.
 
 ## misc notes
 
+### meal data structures
+
+- a "food" is named, and has nutritional info per serving (and info on what a serving is)
+    - food can have tags like vegan, vegetarian, nut-free, gluten-free
+- a "meal" is a collection of foods and how many servings of each. a meal serves 1 and is consumed in one sitting
+- a "day" is a collection of meals, conceptually spread across 24 hours
+- a "group meal" is a collection of meals, conceptually spread across people who will have a meal together, simultaneously
+
+- a "recipe book" contains 1+ "recipe"s
+- a "recipe"
+    - specifies specific quantities of "food"s as ingredients
+    - yields some number of "servings" of a "food"
+    - calculates the nutrition info of the yielded food serving based on the ingredients used
+
 ### macros to calories
 
 - carbs: 4 kcal/g
