@@ -1,8 +1,14 @@
+* {
+  box-sizing: border-box;
+}
+
 .app {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .app-main {
@@ -14,7 +20,7 @@
 .welcome-card {
   background: #2c3e50;
   border-radius: 12px;
-  padding: 2rem;
+  padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   color: #ecf0f1;
 }
@@ -38,10 +44,12 @@
   border: 2px solid #34495e;
   border-radius: 6px;
   font-size: 1rem;
-  width: 100px;
+  width: min(100px, 25vw);
+  max-width: 100px;
   text-align: center;
   background: #34495e;
   color: #ecf0f1;
+  box-sizing: border-box;
 }
 
 /* Hide number input spinner arrows */
@@ -123,7 +131,7 @@
 .macro-item {
   display: grid;
   grid-template-columns: 80px 40px 20px 60px 10px 100px 60px;
-  gap: 0.5rem;
+  gap: 0.25rem;
   align-items: center;
   padding: 0.75rem;
   background: #34495e;
@@ -132,6 +140,8 @@
   border-left: 4px solid var(--macro-color, #4CAF50);
   color: #ecf0f1;
   font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  overflow-x: auto;
 }
 
 .macro-item[data-macro="carbs"] {
@@ -260,6 +270,36 @@
   color: #95a5a6;
 }
 
+@media (max-width: 480px) {
+  .app {
+    padding: 0.75rem;
+  }
+
+  .welcome-card {
+    padding: 1rem;
+  }
+
+  .calorie-input {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .preset-buttons {
+    gap: 0.25rem;
+  }
+
+  .preset-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .macro-item {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    font-size: 0.8rem;
+  }
+}
+
 @media (max-width: 768px) {
   .app {
     padding: 1rem;
@@ -267,6 +307,12 @@
 
   .app-header h1 {
     font-size: 2rem;
+  }
+
+  .macro-item {
+    grid-template-columns: 60px 30px 15px 50px 8px 80px 50px;
+    gap: 0.25rem;
+    font-size: 0.85rem;
   }
 }
 
@@ -426,7 +472,8 @@
 }
 
 .macro-value-input {
-  width: 60px;
+  width: min(60px, 15vw);
+  max-width: 60px;
   padding: 0.25rem 0.5rem;
   border: 1px solid #2c3e50;
   border-radius: 4px;
@@ -434,6 +481,7 @@
   color: #ecf0f1;
   text-align: center;
   font-size: 0.9rem;
+  box-sizing: border-box;
 }
 
 .macro-value-input:focus {
@@ -593,10 +641,22 @@
     flex-direction: column;
     align-items: stretch;
     gap: 0.75rem;
+    padding: 0.75rem;
   }
 
   .meal-macros {
     justify-content: space-around;
+    gap: 0.5rem;
+  }
+
+  .macro-input {
+    flex-direction: column;
+    gap: 0.25rem;
+    text-align: center;
+  }
+
+  .macro-input label {
+    min-width: auto;
   }
 
   .total-row,
