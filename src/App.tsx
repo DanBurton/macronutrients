@@ -142,11 +142,6 @@ function EditGoals({
                         >
                             <span className="macro-name">{label}</span>
                             <span className="macro-grams">{grams}g</span>
-                            <span className="macro-multiply">*</span>
-                            <span className="macro-conversion-rate">
-                                {caloriesPerGramValue} kcal/g
-                            </span>
-                            <span className="macro-equals">=</span>
                             <span className="macro-calories">
                                 {calories} kcal
                             </span>

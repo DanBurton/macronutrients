@@ -52,18 +52,6 @@
     box-sizing: border-box;
 }
 
-/* Hide number input spinner arrows */
-.calorie-input input::-webkit-outer-spin-button,
-.calorie-input input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-.calorie-input input[type='number'] {
-    -moz-appearance: textfield;
-    appearance: textfield;
-}
-
 .calorie-input input:focus {
     outline: none;
     border-color: #4caf50;
@@ -129,8 +117,8 @@
 
 .macro-item {
     display: grid;
-    grid-template-columns: 80px 40px 20px 60px 10px 100px 60px auto;
-    gap: 0.25rem;
+    grid-template-columns: 80px 50px 100px 80px auto;
+    gap: 0.5rem;
     align-items: center;
     padding: 0.75rem;
     background: #34495e;
@@ -165,26 +153,10 @@
     color: var(--macro-color, #4caf50);
 }
 
-.macro-multiply {
-    text-align: center;
-    color: #bdc3c7;
-}
-
-.macro-conversion-rate {
-    text-align: center;
-    color: #95a5a6;
-    font-size: 0.7em;
-}
-
-.macro-equals {
-    text-align: center;
-    color: #bdc3c7;
-}
-
 .macro-calories {
     text-align: right;
     font-weight: bold;
-    color: var(--macro-color, #4caf50);
+    color: #2196f3;
 }
 
 .macro-percentage {
@@ -266,7 +238,7 @@
 
 @media (max-width: 480px) {
     .app {
-        padding: 0.75rem;
+        padding: 0.5rem;
     }
 
     .welcome-card {
@@ -276,6 +248,11 @@
     .calorie-input {
         flex-direction: column;
         gap: 0.75rem;
+    }
+
+    .calorie-input input {
+        width: min(80px, 20vw);
+        max-width: 80px;
     }
 
     .preset-buttons {
@@ -291,12 +268,51 @@
         grid-template-columns: 1fr;
         gap: 0.25rem;
         font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+
+    .macros-preview {
+        margin: 1rem 0.5rem;
+    }
+}
+
+/* Extra small screens (320px and below) */
+@media (max-width: 320px) {
+    .app {
+        padding: 0.25rem;
+        max-width: 100vw;
+    }
+
+    .welcome-card {
+        padding: 0.75rem;
+        margin: 0.25rem;
+    }
+
+    .preset-button {
+        padding: 0.4rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .calorie-input input {
+        width: 70px;
+        max-width: 70px;
+        font-size: 0.9rem;
+    }
+
+    .macros-preview {
+        margin: 0.5rem 0.25rem;
+    }
+
+    .macro-item {
+        padding: 0.4rem;
+        font-size: 0.75rem;
     }
 }
 
 @media (max-width: 768px) {
     .app {
-        padding: 1rem;
+        padding: 0.75rem;
+        max-width: 100vw;
     }
 
     .app-header h1 {
@@ -304,9 +320,15 @@
     }
 
     .macro-item {
-        grid-template-columns: 60px 30px 15px 50px 8px 80px 50px auto;
-        gap: 0.25rem;
+        grid-template-columns: 60px 40px 80px 60px auto;
+        gap: 0.3rem;
         font-size: 0.85rem;
+        padding: 0.6rem;
+    }
+
+    .calorie-input input {
+        width: min(90px, 22vw);
+        max-width: 90px;
     }
 }
 
@@ -657,6 +679,11 @@
         min-width: auto;
     }
 
+    .macro-value-input {
+        width: min(50px, 12vw);
+        max-width: 50px;
+    }
+
     .total-row,
     .goal-row,
     .remaining-row {
@@ -673,5 +700,16 @@
 
     .macro-values {
         align-self: flex-end;
+    }
+
+    .meal-planning-header {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    .summary-single-line {
+        flex-direction: column;
+        gap: 0.5rem;
     }
 }
