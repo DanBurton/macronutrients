@@ -30,7 +30,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  margin: 1.5rem 0;
+  margin: 0 0 1.5rem 0;
   flex-wrap: wrap;
 }
 
@@ -115,11 +115,10 @@
 }
 
 .macros-preview {
-  margin-top: 2rem;
   text-align: left;
   background: #2c3e50;
   border-radius: 12px;
-  padding: 1.5rem;
+  margin: 1.5rem;
 }
 
 .macros-preview h3 {
@@ -130,7 +129,7 @@
 
 .macro-item {
   display: grid;
-  grid-template-columns: 80px 40px 20px 60px 10px 100px 60px;
+  grid-template-columns: 80px 40px 20px 60px 10px 100px 60px auto;
   gap: 0.25rem;
   align-items: center;
   padding: 0.75rem;
@@ -141,7 +140,6 @@
   color: #ecf0f1;
   font-family: 'Courier New', monospace;
   font-size: 0.9rem;
-  overflow-x: auto;
 }
 
 .macro-item[data-macro="carbs"] {
@@ -194,9 +192,6 @@
   color: #95a5a6;
   font-weight: bold;
   font-size: 1.1em;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 .calculated-indicator {
@@ -213,7 +208,6 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
-  margin-left: 0.5rem;
 }
 
 .inline-button {
@@ -310,7 +304,7 @@
   }
 
   .macro-item {
-    grid-template-columns: 60px 30px 15px 50px 8px 80px 50px;
+    grid-template-columns: 60px 30px 15px 50px 8px 80px 50px auto;
     gap: 0.25rem;
     font-size: 0.85rem;
   }
@@ -342,7 +336,6 @@
 }
 
 .collapse-button {
-  margin-top: 1.5rem;
   padding: 0.75rem 1.5rem;
   background: #3498db;
   color: white;
@@ -495,8 +488,9 @@
 }
 
 .delete-meal-button {
-  width: 24px;
-  height: 24px;
+  width: 10px;
+  height: 10px;
+  padding: 10px;
   border: none;
   border-radius: 50%;
   background: #e74c3c;
