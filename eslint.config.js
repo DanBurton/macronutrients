@@ -7,30 +7,23 @@ import prettierConfig from 'eslint-config-prettier';
 import { globalIgnores } from 'eslint/config';
 
 export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-      prettierConfig,
-    ],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+    globalIgnores(['dist']),
+    {
+        files: ['**/*.{ts,tsx}'],
+        extends: [
+            js.configs.recommended,
+            tseslint.configs.recommended,
+            reactHooks.configs['recommended-latest'],
+            reactRefresh.configs.vite,
+            prettierConfig,
+        ],
+        languageOptions: {
+            ecmaVersion: 2020,
+            globals: globals.browser,
+        },
+        rules: {
+            semi: ['error', 'always'],
+            'no-trailing-spaces': 'error',
+        },
     },
-    rules: {
-      'semi': ['error', 'always'],
-      'no-trailing-spaces': 'error',
-      'operator-linebreak': ['error', 'before', {
-        'overrides': { '?': 'before', ':': 'before' }
-      }],
-      'indent': ['error', 4, {
-        'flatTernaryExpressions': true,
-        'offsetTernaryExpressions': false
-      }],
-    },
-  },
 ]);
