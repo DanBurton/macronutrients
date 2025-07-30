@@ -1,5 +1,6 @@
 import { type MacroRatios } from './constants';
 import { calculateTotalCalories, calculateGoalMacros } from './utils';
+import './MealPlanning.css';
 
 interface Meal {
     id: number;

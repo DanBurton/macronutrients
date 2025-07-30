@@ -1,0 +1,305 @@
+/* Meal Planning Styles */
+.meal-planning {
+    margin-top: 1.5rem;
+}
+
+.meal-planning-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.meal-planning-header h3 {
+    color: #ecf0f1;
+    margin: 0;
+}
+
+.add-meal-button {
+    padding: 0.5rem 1rem;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.add-meal-button:hover {
+    background: #229954;
+}
+
+.meals-list {
+    margin-bottom: 1.5rem;
+}
+
+.meal-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #34495e;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.meal-name-input {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.5rem;
+    border: 2px solid #2c3e50;
+    border-radius: 4px;
+    background: #2c3e50;
+    color: #ecf0f1;
+    font-size: 0.9rem;
+}
+
+.meal-name-input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.meal-macros {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.macro-input {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.macro-input label {
+    font-size: 0.8rem;
+    color: #bdc3c7;
+    min-width: 45px;
+}
+
+.macro-value-input {
+    width: min(60px, 15vw);
+    max-width: 60px;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #2c3e50;
+    border-radius: 4px;
+    background: #2c3e50;
+    color: #ecf0f1;
+    text-align: center;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+.macro-value-input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.macro-input span {
+    font-size: 0.8rem;
+    color: #95a5a6;
+}
+
+.delete-meal-button {
+    width: 10px;
+    height: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    line-height: 1;
+    transition: background-color 0.2s ease;
+}
+
+.delete-meal-button:hover {
+    box-shadow: 0 2px 8px black;
+}
+
+.meal-summary {
+    padding: 1rem;
+    background: #2c3e50;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.summary-charts {
+    margin-bottom: 1.5rem;
+}
+
+.macro-chart {
+    margin-bottom: 1rem;
+}
+
+.macro-chart:last-child {
+    margin-bottom: 0;
+}
+
+.macro-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.macro-label {
+    font-weight: bold;
+    color: #ecf0f1;
+}
+
+.macro-values {
+    color: #bdc3c7;
+    font-size: 0.85rem;
+}
+
+.progress-bar {
+    position: relative;
+    width: 100%;
+    height: 20px;
+    background: #34495e;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+    background: linear-gradient(
+        90deg,
+        var(--fill-color),
+        var(--fill-color-light)
+    );
+}
+
+.progress-overflow {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+    opacity: 0.8;
+}
+
+.carbs-fill {
+    --fill-color: #4caf50;
+    --fill-color-light: #66bb6a;
+}
+
+.protein-fill {
+    --fill-color: #ff5722;
+    --fill-color-light: #ff7043;
+}
+
+.fat-fill {
+    --fill-color: #ffc107;
+    --fill-color-light: #ffca28;
+}
+
+.calories-fill {
+    --fill-color: #2196f3;
+    --fill-color-light: #42a5f5;
+}
+
+.summary-totals {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.total-row,
+.goal-row,
+.remaining-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 100px;
+    gap: 1rem;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.remaining-row-label {
+    font-weight: bold;
+    color: #ecf0f1;
+}
+
+/* Color-coded remaining macros text */
+.carbs-remaining {
+    color: #4caf50;
+}
+
+.protein-remaining {
+    color: #ff5722;
+}
+
+.fat-remaining {
+    color: #ffc107;
+}
+
+.calories-remaining {
+    color: #2196f3;
+}
+
+/* Mobile styles for meal planning */
+@media (max-width: 768px) {
+    .meal-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .meal-macros {
+        justify-content: space-around;
+        gap: 0.5rem;
+    }
+
+    .macro-input {
+        flex-direction: column;
+        gap: 0.25rem;
+        text-align: center;
+    }
+
+    .macro-input label {
+        min-width: auto;
+    }
+
+    .macro-value-input {
+        width: min(50px, 12vw);
+        max-width: 50px;
+    }
+
+    .total-row,
+    .goal-row,
+    .remaining-row {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 0.25rem;
+    }
+
+    .macro-chart-header {
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: flex-start;
+    }
+
+    .macro-values {
+        align-self: flex-end;
+    }
+
+    .meal-planning-header {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: center;
+    }
+}
