@@ -22,6 +22,13 @@ export default tseslint.config([
     rules: {
       'semi': ['error', 'always'],
       'no-trailing-spaces': 'error',
+      'operator-linebreak': ['error', 'before', {
+        'overrides': { '?': 'before', ':': 'before' }
+      }],
+      'indent': ['error', 4, {
+        'flatTernaryExpressions': true,
+        'offsetTernaryExpressions': false
+      }],
     },
   },
 ]);
