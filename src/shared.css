@@ -1,0 +1,18 @@
+/* Shared styles across components */
+
+/* Color-coded macro text classes */
+.carbs-text {
+    color: #4caf50;
+}
+
+.protein-text {
+    color: #ff5722;
+}
+
+.fat-text {
+    color: #ffc107;
+}
+
+.calories-text {
+    color: #2196f3;
+}

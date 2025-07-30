@@ -271,23 +271,6 @@
     background: #4a5f7a;
 }
 
-/* Color-coded remaining macros text */
-.carbs-remaining {
-    color: #4caf50;
-}
-
-.protein-remaining {
-    color: #ff5722;
-}
-
-.fat-remaining {
-    color: #ffc107;
-}
-
-.calories-remaining {
-    color: #2196f3;
-}
-
 /* Mobile styles for goal setting */
 @media (max-width: 480px) {
     .calorie-input {

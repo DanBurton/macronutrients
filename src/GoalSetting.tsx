@@ -7,6 +7,7 @@ import {
 } from './constants';
 import { calculateGoalMacros, calculateMacroPercentages } from './utils';
 import './GoalSetting.css';
+import './shared.css';
 
 interface MacroControlsProps {
     setter: ((value: number) => void) | null;
@@ -172,33 +173,24 @@ function GoalsSummary({
         <div className="goals-summary">
             <div className="summary-single-line">
                 <span className="summary-macros-grams">
-                    <span className="carbs-remaining">
+                    <span className="carbs-text">
                         {goalMacros.carbs}g carbs
                     </span>{' '}
                     /{' '}
-                    <span className="protein-remaining">
+                    <span className="protein-text">
                         {goalMacros.protein}g protein
                     </span>{' '}
-                    /{' '}
-                    <span className="fat-remaining">{goalMacros.fat}g fat</span>
+                    / <span className="fat-text">{goalMacros.fat}g fat</span>
                 </span>
                 <span className="summary-calories-and-distribution">
-                    <span className="calories-remaining">
-                        {dailyCalories} kcal
-                    </span>{' '}
+                    <span className="calories-text">{dailyCalories} kcal</span>{' '}
                     (
-                    <span className="carbs-remaining">
-                        {macroPercentages.carbs}
-                    </span>
+                    <span className="carbs-text">{macroPercentages.carbs}</span>
                     /
-                    <span className="protein-remaining">
+                    <span className="protein-text">
                         {macroPercentages.protein}
                     </span>
-                    /
-                    <span className="fat-remaining">
-                        {macroPercentages.fat}
-                    </span>
-                    )
+                    /<span className="fat-text">{macroPercentages.fat}</span>)
                 </span>
                 <button
                     className="collapse-button settings-cog"
