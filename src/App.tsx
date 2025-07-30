@@ -8,6 +8,7 @@ import {
     type PresetKey,
     type MacroRatios,
 } from './constants';
+import { calculateGoalMacros, calculateMacroPercentages } from './utils';
 
 interface MacroControlsProps {
     setter: ((value: number) => void) | null;
@@ -166,38 +167,40 @@ function GoalsSummary({
     currentMacros,
     setIsCollapsed,
 }: GoalsSummaryProps) {
-    const carbsGrams = Math.round(
-        (dailyCalories * currentMacros.carbs) / CALORIES_PER_GRAM.carbs
-    );
-    const proteinGrams = Math.round(
-        (dailyCalories * currentMacros.protein) / CALORIES_PER_GRAM.protein
-    );
-    const fatGrams = Math.round(
-        (dailyCalories * currentMacros.fat) / CALORIES_PER_GRAM.fat
-    );
-
-    const carbsPercent = Math.round(currentMacros.carbs * 100);
-    const proteinPercent = Math.round(currentMacros.protein * 100);
-    const fatPercent = Math.round(currentMacros.fat * 100);
+    const goalMacros = calculateGoalMacros(dailyCalories, currentMacros);
+    const macroPercentages = calculateMacroPercentages(currentMacros);
 
     return (
         <div className="goals-summary">
             <div className="summary-single-line">
                 <span className="summary-macros-grams">
-                    <span className="carbs-remaining">{carbsGrams}g carbs</span>{' '}
+                    <span className="carbs-remaining">
+                        {goalMacros.carbs}g carbs
+                    </span>{' '}
                     /{' '}
                     <span className="protein-remaining">
-                        {proteinGrams}g protein
+                        {goalMacros.protein}g protein
                     </span>{' '}
-                    / <span className="fat-remaining">{fatGrams}g fat</span>
+                    /{' '}
+                    <span className="fat-remaining">{goalMacros.fat}g fat</span>
                 </span>
                 <span className="summary-calories-and-distribution">
                     <span className="calories-remaining">
                         {dailyCalories} kcal
                     </span>{' '}
-                    (<span className="carbs-remaining">{carbsPercent}</span>/
-                    <span className="protein-remaining">{proteinPercent}</span>/
-                    <span className="fat-remaining">{fatPercent}</span>)
+                    (
+                    <span className="carbs-remaining">
+                        {macroPercentages.carbs}
+                    </span>
+                    /
+                    <span className="protein-remaining">
+                        {macroPercentages.protein}
+                    </span>
+                    /
+                    <span className="fat-remaining">
+                        {macroPercentages.fat}
+                    </span>
+                    )
                 </span>
                 <button
                     className="collapse-button settings-cog"

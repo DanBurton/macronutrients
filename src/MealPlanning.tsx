@@ -182,7 +182,7 @@ function MealPlanning({
                                 className="delete-meal-button"
                                 onClick={() => deleteMeal(meal.id)}
                             >
-                                ×
+                                🗑
                             </button>
                         </div>
                     ))}

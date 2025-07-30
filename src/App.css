@@ -532,7 +532,7 @@ body {
     padding: 10px;
     border: none;
     border-radius: 50%;
-    background: #e74c3c;
+    background: transparent;
     color: white;
     cursor: pointer;
     display: flex;
@@ -544,7 +544,7 @@ body {
 }
 
 .delete-meal-button:hover {
-    background: #c0392b;
+    box-shadow: 0 2px 8px black;
 }
 
 .meal-summary {

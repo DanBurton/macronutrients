@@ -53,3 +53,16 @@ export function calculateGoalMacros(
         fat: calculateMacroGrams(dailyCalories, macroRatios.fat, 'fat'),
     };
 }
+
+/**
+ * Convert macro ratios to percentages
+ */
+export function calculateMacroPercentages(
+    macroRatios: MacroRatios
+): MacroRatios {
+    return {
+        carbs: Math.round(macroRatios.carbs * 100),
+        protein: Math.round(macroRatios.protein * 100),
+        fat: Math.round(macroRatios.fat * 100),
+    };
+}
