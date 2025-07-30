@@ -223,33 +223,28 @@ function MealPlanning({
                         />
                     </div>
 
-                    <div className="summary-totals">
-                        <div className="remaining-row">
-                            <span className="remaining-row-label">
-                                Remaining:
+                    <div className="remaining-row">
+                        <span className="remaining-row-label">Remaining:</span>
+                        <span>
+                            <span className="carbs-remaining">
+                                {goalMacros.carbs - totalMacros.carbs}g carbs
+                            </span>{' '}
+                            /
+                            <span className="protein-remaining">
+                                {' '}
+                                {goalMacros.protein - totalMacros.protein}g
+                                protein
+                            </span>{' '}
+                            /
+                            <span className="fat-remaining">
+                                {' '}
+                                {goalMacros.fat - totalMacros.fat}g fat
                             </span>
-                            <span>
-                                <span className="carbs-remaining">
-                                    {goalMacros.carbs - totalMacros.carbs}g
-                                    carbs
-                                </span>{' '}
-                                /
-                                <span className="protein-remaining">
-                                    {' '}
-                                    {goalMacros.protein - totalMacros.protein}g
-                                    protein
-                                </span>{' '}
-                                /
-                                <span className="fat-remaining">
-                                    {' '}
-                                    {goalMacros.fat - totalMacros.fat}g fat
-                                </span>
-                            </span>
-                            <span className="calories-remaining">
-                                {remainingCalories > 0 ? '+' : ''}
-                                {Math.round(remainingCalories)} kcal
-                            </span>
-                        </div>
+                        </span>
+                        <span className="calories-remaining">
+                            {remainingCalories > 0 ? '+' : ''}
+                            {Math.round(remainingCalories)} kcal
+                        </span>
                     </div>
                 </div>
             )}
