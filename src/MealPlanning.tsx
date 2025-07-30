@@ -1,3 +1,6 @@
+import { type MacroRatios } from './constants';
+import { calculateTotalCalories, calculateGoalMacros } from './utils';
+
 interface Meal {
     id: number;
     name: string;
@@ -10,7 +13,7 @@ interface MealPlanningProps {
     meals: Meal[];
     setMeals: (meals: Meal[]) => void;
     dailyCalories: number;
-    currentMacros: { carbs: number; protein: number; fat: number };
+    currentMacros: MacroRatios;
 }
 
 interface MacroBarProps {
@@ -95,13 +98,10 @@ function MealPlanning({
         { carbs: 0, protein: 0, fat: 0 }
     );
 
-    const totalCalories =
-        totalMacros.carbs * 4 + totalMacros.protein * 4 + totalMacros.fat * 9;
+    const totalCalories = calculateTotalCalories(totalMacros);
     const remainingCalories = dailyCalories - totalCalories;
 
-    const goalCarbs = Math.round((dailyCalories * currentMacros.carbs) / 4);
-    const goalProtein = Math.round((dailyCalories * currentMacros.protein) / 4);
-    const goalFat = Math.round((dailyCalories * currentMacros.fat) / 9);
+    const goalMacros = calculateGoalMacros(dailyCalories, currentMacros);
 
     return (
         <div className="meal-planning">
@@ -195,21 +195,21 @@ function MealPlanning({
                         <MacroBar
                             label="Carbs"
                             current={totalMacros.carbs}
-                            goal={goalCarbs}
+                            goal={goalMacros.carbs}
                             unit="g"
                             colorClass="carbs-fill"
                         />
                         <MacroBar
                             label="Protein"
                             current={totalMacros.protein}
-                            goal={goalProtein}
+                            goal={goalMacros.protein}
                             unit="g"
                             colorClass="protein-fill"
                         />
                         <MacroBar
                             label="Fat"
                             current={totalMacros.fat}
-                            goal={goalFat}
+                            goal={goalMacros.fat}
                             unit="g"
                             colorClass="fat-fill"
                         />
@@ -229,17 +229,19 @@ function MealPlanning({
                             </span>
                             <span>
                                 <span className="carbs-remaining">
-                                    {goalCarbs - totalMacros.carbs}g carbs
+                                    {goalMacros.carbs - totalMacros.carbs}g
+                                    carbs
                                 </span>{' '}
                                 /
                                 <span className="protein-remaining">
                                     {' '}
-                                    {goalProtein - totalMacros.protein}g protein
+                                    {goalMacros.protein - totalMacros.protein}g
+                                    protein
                                 </span>{' '}
                                 /
                                 <span className="fat-remaining">
                                     {' '}
-                                    {goalFat - totalMacros.fat}g fat
+                                    {goalMacros.fat - totalMacros.fat}g fat
                                 </span>
                             </span>
                             <span className="calories-remaining">

@@ -1,23 +1,13 @@
-import { useState, useEffect } from 'react';
 import './App.css';
 import MealPlanning, { type Meal } from './MealPlanning';
-
-// https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels
-const macroPresets = {
-    athletic: { name: 'Athletic', carbs: 0.55, protein: 0.25, fat: 0.2 },
-    usda: { name: 'USDA Food Labels', carbs: 0.55, protein: 0.1, fat: 0.35 },
-    balanced: { name: 'Balanced', carbs: 0.45, protein: 0.25, fat: 0.3 },
-    zone: { name: '40 30 30', carbs: 0.4, protein: 0.3, fat: 0.3 },
-    highProtein: { name: 'High Protein', carbs: 0.3, protein: 0.4, fat: 0.3 },
-    lowCarb: { name: 'Low Carb', carbs: 0.2, protein: 0.3, fat: 0.5 },
-    keto: { name: 'Keto', carbs: 0.05, protein: 0.2, fat: 0.75 },
-    custom: { name: 'Custom', carbs: 0.4, protein: 0.3, fat: 0.3 },
-} as const;
-
-type PresetKey = keyof typeof macroPresets;
-
-const macroLabels = { carbs: 'Carbs', protein: 'Protein', fat: 'Fat' };
-const caloriesPerGram = { carbs: 4, protein: 4, fat: 9 };
+import { useLocalStorage } from './hooks/useLocalStorage';
+import {
+    MACRO_PRESETS,
+    MACRO_LABELS,
+    CALORIES_PER_GRAM,
+    type PresetKey,
+    type MacroRatios,
+} from './constants';
 
 interface MacroControlsProps {
     setter: ((value: number) => void) | null;
@@ -72,7 +62,7 @@ interface EditGoalsProps {
     customProtein: number;
     setCustomProtein: (value: number) => void;
     customFat: number;
-    currentMacros: { carbs: number; protein: number; fat: number };
+    currentMacros: MacroRatios;
 }
 
 function EditGoals({
@@ -103,7 +93,7 @@ function EditGoals({
             <div className="preset-selector">
                 <h3>Macronutrient Distribution</h3>
                 <div className="preset-buttons">
-                    {Object.entries(macroPresets).map(([key, preset]) => (
+                    {Object.entries(MACRO_PRESETS).map(([key, preset]) => (
                         <button
                             key={key}
                             className={`preset-button ${selectedPreset === key ? 'active' : ''}`}
@@ -119,13 +109,13 @@ function EditGoals({
                 <h3>Macronutrient Goals</h3>
                 {(['carbs', 'protein', 'fat'] as const).map((macro) => {
                     const ratio = currentMacros[macro];
-                    const caloriesPerGramValue = caloriesPerGram[macro];
+                    const caloriesPerGramValue = CALORIES_PER_GRAM[macro];
                     const grams = Math.round(
                         (dailyCalories * ratio) / caloriesPerGramValue
                     );
                     const calories = Math.round(dailyCalories * ratio);
                     const percentage = Math.round(ratio * 100);
-                    const label = macroLabels[macro];
+                    const label = MACRO_LABELS[macro];
 
                     const [setter, currentValue] =
                         macro === 'carbs'
@@ -167,7 +157,7 @@ function EditGoals({
 
 interface GoalsSummaryProps {
     dailyCalories: number;
-    currentMacros: { carbs: number; protein: number; fat: number };
+    currentMacros: MacroRatios;
     setIsCollapsed: (collapsed: boolean) => void;
 }
 
@@ -177,13 +167,13 @@ function GoalsSummary({
     setIsCollapsed,
 }: GoalsSummaryProps) {
     const carbsGrams = Math.round(
-        (dailyCalories * currentMacros.carbs) / caloriesPerGram.carbs
+        (dailyCalories * currentMacros.carbs) / CALORIES_PER_GRAM.carbs
     );
     const proteinGrams = Math.round(
-        (dailyCalories * currentMacros.protein) / caloriesPerGram.protein
+        (dailyCalories * currentMacros.protein) / CALORIES_PER_GRAM.protein
     );
     const fatGrams = Math.round(
-        (dailyCalories * currentMacros.fat) / caloriesPerGram.fat
+        (dailyCalories * currentMacros.fat) / CALORIES_PER_GRAM.fat
     );
 
     const carbsPercent = Math.round(currentMacros.carbs * 100);
@@ -221,72 +211,39 @@ function GoalsSummary({
 }
 
 function App() {
-    const [dailyCalories, setDailyCalories] = useState(() => {
-        const savedCalories = localStorage.getItem('dailyCalories');
-        return savedCalories ? Number(savedCalories) : 2000;
-    });
+    const [dailyCalories, setDailyCalories] = useLocalStorage(
+        'dailyCalories',
+        2000
+    );
+    const [selectedPreset, setSelectedPreset] = useLocalStorage<PresetKey>(
+        'macroPreset',
+        'balanced'
+    );
+    const [isCollapsed, setIsCollapsed] = useLocalStorage('isCollapsed', false);
+    const [customCarbs, setCustomCarbs] = useLocalStorage('customCarbs', 40);
+    const [customProtein, setCustomProtein] = useLocalStorage(
+        'customProtein',
+        30
+    );
+    const [meals, setMeals] = useLocalStorage<Meal[]>('meals', []);
 
-    const [selectedPreset, setSelectedPreset] = useState<PresetKey>(() => {
-        const savedPreset = localStorage.getItem('macroPreset') as PresetKey;
-        return savedPreset && savedPreset in macroPresets
-            ? savedPreset
-            : 'balanced';
-    });
-
-    const [isCollapsed, setIsCollapsed] = useState(() => {
-        const saved = localStorage.getItem('isCollapsed');
-        return saved ? JSON.parse(saved) : false;
-    });
-
-    const [customCarbs, setCustomCarbs] = useState(() => {
-        const saved = localStorage.getItem('customCarbs');
-        return saved ? Number(saved) : 40;
-    });
-
-    const [customProtein, setCustomProtein] = useState(() => {
-        const saved = localStorage.getItem('customProtein');
-        return saved ? Number(saved) : 30;
-    });
-
-    const [meals, setMeals] = useState<Meal[]>(() => {
-        const saved = localStorage.getItem('meals');
-        return saved ? JSON.parse(saved) : [];
-    });
-
-    useEffect(() => {
-        localStorage.setItem('dailyCalories', dailyCalories.toString());
-    }, [dailyCalories]);
-
-    useEffect(() => {
-        localStorage.setItem('customCarbs', customCarbs.toString());
-    }, [customCarbs]);
-
-    useEffect(() => {
-        localStorage.setItem('macroPreset', selectedPreset);
-    }, [selectedPreset]);
-
-    useEffect(() => {
-        localStorage.setItem('customProtein', customProtein.toString());
-    }, [customProtein]);
-
-    useEffect(() => {
-        localStorage.setItem('isCollapsed', JSON.stringify(isCollapsed));
-    }, [isCollapsed]);
-
-    useEffect(() => {
-        localStorage.setItem('meals', JSON.stringify(meals));
-    }, [meals]);
+    // Validate preset exists in case localStorage has an invalid value
+    const validatedPreset =
+        selectedPreset in MACRO_PRESETS ? selectedPreset : 'balanced';
+    if (validatedPreset !== selectedPreset) {
+        setSelectedPreset(validatedPreset);
+    }
 
     const customFat = Math.max(0, 100 - customCarbs - customProtein);
 
-    const currentMacros =
-        selectedPreset === 'custom'
+    const currentMacros: MacroRatios =
+        validatedPreset === 'custom'
             ? {
                   carbs: customCarbs / 100,
                   protein: customProtein / 100,
                   fat: customFat / 100,
               }
-            : macroPresets[selectedPreset];
+            : MACRO_PRESETS[validatedPreset];
 
     return (
         <div className="app">
