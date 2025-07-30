@@ -2,13 +2,29 @@
     box-sizing: border-box;
 }
 
+/* Ensure full width and centering */
+html,
+body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#root {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
 .app {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 0;
     padding: 1rem;
     text-align: center;
     box-sizing: border-box;
     width: 100%;
+    min-width: 600px; /* Prevent shrinking but don't over-stretch on large screens */
 }
 
 .app-main {
@@ -17,7 +33,7 @@
     gap: 2rem;
 }
 
-.welcome-card {
+.card {
     background: #2c3e50;
     border-radius: 12px;
     padding: 1.5rem;
@@ -241,7 +257,7 @@
         padding: 0.5rem;
     }
 
-    .welcome-card {
+    .card {
         padding: 1rem;
     }
 
@@ -283,7 +299,7 @@
         max-width: 100vw;
     }
 
-    .welcome-card {
+    .card {
         padding: 0.75rem;
         margin: 0.25rem;
     }
@@ -313,6 +329,7 @@
     .app {
         padding: 0.75rem;
         max-width: 100vw;
+        min-width: 100vw; /* Use full viewport width on mobile/tablet */
     }
 
     .app-header h1 {

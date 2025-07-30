@@ -291,7 +291,7 @@ function App() {
     return (
         <div className="app">
             <main className="app-main">
-                <div className="welcome-card">
+                <div className="card">
                     {isCollapsed ? (
                         <GoalsSummary
                             dailyCalories={dailyCalories}
@@ -322,7 +322,7 @@ function App() {
                     )}
                 </div>
 
-                <div className="welcome-card">
+                <div className="card">
                     <MealPlanning
                         meals={meals}
                         setMeals={setMeals}
