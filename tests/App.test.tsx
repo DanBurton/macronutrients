@@ -20,13 +20,15 @@ describe('App Component Integration Tests', () => {
     });
 
     describe('Initial State', () => {
-        it('renders both main sections (goal setting and daily macros)', () => {
+        it('renders all main sections (goal setting, meal planning, and daily macros)', () => {
             render(<App />);
 
             // Check if main app structure is present
             expect(
                 screen.getByLabelText('Daily Calorie Goal')
             ).toBeInTheDocument();
+            expect(screen.getByText('Meal Planning')).toBeInTheDocument();
+            expect(screen.getByText('+ Add Food')).toBeInTheDocument();
             expect(screen.getByText('Daily Macros')).toBeInTheDocument();
             expect(screen.getByText('+ Add Meal')).toBeInTheDocument();
         });
@@ -129,7 +131,7 @@ describe('App Component Integration Tests', () => {
 
             expect(appElement).toBeInTheDocument();
             expect(mainElement).toBeInTheDocument();
-            expect(cards).toHaveLength(2); // Goal setting card + daily macros card
+            expect(cards).toHaveLength(3); // Goal setting card + meal planning card + daily macros card
         });
 
         it('maintains responsive layout structure', () => {

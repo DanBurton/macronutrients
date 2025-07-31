@@ -1,6 +1,7 @@
 import './App.css';
 import DailyMacros, { type Meal } from './DailyMacros';
 import GoalSetting from './GoalSetting';
+import MealPlanning from './MealPlanning';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { MACRO_PRESETS, type PresetKey, type MacroRatios } from './constants';
 
@@ -14,6 +15,8 @@ function App() {
         'balanced'
     );
     const [isCollapsed, setIsCollapsed] = useLocalStorage('isCollapsed', false);
+    const [isMealPlanningCollapsed, setIsMealPlanningCollapsed] =
+        useLocalStorage('isMealPlanningCollapsed', false);
     const [customCarbs, setCustomCarbs] = useLocalStorage('customCarbs', 40);
     const [customProtein, setCustomProtein] = useLocalStorage(
         'customProtein',
@@ -56,6 +59,13 @@ function App() {
                         currentMacros={currentMacros}
                         isCollapsed={isCollapsed}
                         setIsCollapsed={setIsCollapsed}
+                    />
+                </div>
+
+                <div className="card">
+                    <MealPlanning
+                        isCollapsed={isMealPlanningCollapsed}
+                        setIsCollapsed={setIsMealPlanningCollapsed}
                     />
                 </div>
 
