@@ -7,18 +7,20 @@ import './shared.css';
 export interface Food {
     id: number;
     name: string;
-    carbsPer100g: number;
-    proteinPer100g: number;
-    fatPer100g: number;
-    servingSize: number; // in grams
+    servingSize: number;
+    servingUnit: string;
+    carbsPerServing: number;
+    proteinPerServing: number;
+    fatPerServing: number;
 }
 
 interface FoodFormData {
     name: string;
-    carbsPer100g: string;
-    proteinPer100g: string;
-    fatPer100g: string;
     servingSize: string;
+    servingUnit: string;
+    carbsPerServing: string;
+    proteinPerServing: string;
+    fatPerServing: string;
 }
 
 interface MealPlanningProps {
@@ -31,10 +33,11 @@ function MealPlanning({ isCollapsed, setIsCollapsed }: MealPlanningProps) {
     const [showAddForm, setShowAddForm] = useState(false);
     const [formData, setFormData] = useState<FoodFormData>({
         name: '',
-        carbsPer100g: '',
-        proteinPer100g: '',
-        fatPer100g: '',
-        servingSize: '100',
+        servingSize: '1',
+        servingUnit: 'cup',
+        carbsPerServing: '',
+        proteinPerServing: '',
+        fatPerServing: '',
     });
 
     const addFood = () => {
@@ -43,19 +46,21 @@ function MealPlanning({ isCollapsed, setIsCollapsed }: MealPlanningProps) {
         const newFood: Food = {
             id: Date.now(),
             name: formData.name.trim(),
-            carbsPer100g: parseFloat(formData.carbsPer100g) || 0,
-            proteinPer100g: parseFloat(formData.proteinPer100g) || 0,
-            fatPer100g: parseFloat(formData.fatPer100g) || 0,
-            servingSize: parseFloat(formData.servingSize) || 100,
+            servingSize: parseFloat(formData.servingSize) || 1,
+            servingUnit: formData.servingUnit.trim() || 'serving',
+            carbsPerServing: parseFloat(formData.carbsPerServing) || 0,
+            proteinPerServing: parseFloat(formData.proteinPerServing) || 0,
+            fatPerServing: parseFloat(formData.fatPerServing) || 0,
         };
 
         setFoods([...foods, newFood]);
         setFormData({
             name: '',
-            carbsPer100g: '',
-            proteinPer100g: '',
-            fatPer100g: '',
-            servingSize: '100',
+            servingSize: '1',
+            servingUnit: 'cup',
+            carbsPerServing: '',
+            proteinPerServing: '',
+            fatPerServing: '',
         });
         setShowAddForm(false);
     };
@@ -77,11 +82,11 @@ function MealPlanning({ isCollapsed, setIsCollapsed }: MealPlanningProps) {
     };
 
     const calculateFoodMacros = (food: Food) => {
-        const multiplier = food.servingSize / 100;
+        // Since we now store macros per serving, we just return them directly
         return {
-            carbs: food.carbsPer100g * multiplier,
-            protein: food.proteinPer100g * multiplier,
-            fat: food.fatPer100g * multiplier,
+            carbs: food.carbsPerServing,
+            protein: food.proteinPerServing,
+            fat: food.fatPerServing,
         };
     };
 
@@ -97,10 +102,11 @@ function MealPlanning({ isCollapsed, setIsCollapsed }: MealPlanningProps) {
     const cancelForm = () => {
         setFormData({
             name: '',
-            carbsPer100g: '',
-            proteinPer100g: '',
-            fatPer100g: '',
-            servingSize: '100',
+            servingSize: '1',
+            servingUnit: 'cup',
+            carbsPerServing: '',
+            proteinPerServing: '',
+            fatPerServing: '',
         });
         setShowAddForm(false);
     };
@@ -165,17 +171,61 @@ function MealPlanning({ isCollapsed, setIsCollapsed }: MealPlanningProps) {
                                 </label>
                             </div>
 
-                            <div className="macros-per-100g">
-                                <h4>Macros per 100g:</h4>
+                            <div className="form-row serving-size-row">
+                                <label>
+                                    Serving Size:
+                                    <input
+                                        type="number"
+                                        value={formData.servingSize}
+                                        onChange={(e) =>
+                                            handleFormChange(
+                                                'servingSize',
+                                                e.target.value
+                                            )
+                                        }
+                                        placeholder="1"
+                                        min="0.1"
+                                        step="0.1"
+                                    />
+                                </label>
+                                <label>
+                                    Unit:
+                                    <select
+                                        value={formData.servingUnit}
+                                        onChange={(e) =>
+                                            handleFormChange(
+                                                'servingUnit',
+                                                e.target.value
+                                            )
+                                        }
+                                    >
+                                        <option value="cup">cup</option>
+                                        <option value="tbsp">tbsp</option>
+                                        <option value="tsp">tsp</option>
+                                        <option value="oz">oz</option>
+                                        <option value="g">g</option>
+                                        <option value="lb">lb</option>
+                                        <option value="piece">piece</option>
+                                        <option value="slice">slice</option>
+                                        <option value="serving">serving</option>
+                                    </select>
+                                </label>
+                            </div>
+
+                            <div className="macros-per-serving">
+                                <h4>
+                                    Macros per serving ({formData.servingSize}{' '}
+                                    {formData.servingUnit}):
+                                </h4>
                                 <div className="form-row macros-row">
                                     <label className="carbs-text">
                                         Carbs (g):
                                         <input
                                             type="number"
-                                            value={formData.carbsPer100g}
+                                            value={formData.carbsPerServing}
                                             onChange={(e) =>
                                                 handleFormChange(
-                                                    'carbsPer100g',
+                                                    'carbsPerServing',
                                                     e.target.value
                                                 )
                                             }
@@ -188,10 +238,10 @@ function MealPlanning({ isCollapsed, setIsCollapsed }: MealPlanningProps) {
                                         Protein (g):
                                         <input
                                             type="number"
-                                            value={formData.proteinPer100g}
+                                            value={formData.proteinPerServing}
                                             onChange={(e) =>
                                                 handleFormChange(
-                                                    'proteinPer100g',
+                                                    'proteinPerServing',
                                                     e.target.value
                                                 )
                                             }
@@ -204,10 +254,10 @@ function MealPlanning({ isCollapsed, setIsCollapsed }: MealPlanningProps) {
                                         Fat (g):
                                         <input
                                             type="number"
-                                            value={formData.fatPer100g}
+                                            value={formData.fatPerServing}
                                             onChange={(e) =>
                                                 handleFormChange(
-                                                    'fatPer100g',
+                                                    'fatPerServing',
                                                     e.target.value
                                                 )
                                             }
@@ -217,25 +267,6 @@ function MealPlanning({ isCollapsed, setIsCollapsed }: MealPlanningProps) {
                                         />
                                     </label>
                                 </div>
-                            </div>
-
-                            <div className="form-row">
-                                <label>
-                                    Default Serving Size (g):
-                                    <input
-                                        type="number"
-                                        value={formData.servingSize}
-                                        onChange={(e) =>
-                                            handleFormChange(
-                                                'servingSize',
-                                                e.target.value
-                                            )
-                                        }
-                                        placeholder="100"
-                                        min="1"
-                                        step="1"
-                                    />
-                                </label>
                             </div>
 
                             <div className="form-buttons">
@@ -309,31 +340,73 @@ function MealPlanning({ isCollapsed, setIsCollapsed }: MealPlanningProps) {
                                                             'servingSize',
                                                             parseFloat(
                                                                 e.target.value
-                                                            ) || 100
+                                                            ) || 1
                                                         )
                                                     }
-                                                    min="1"
-                                                    step="1"
+                                                    min="0.1"
+                                                    step="0.1"
                                                 />
-                                                g
+                                            </label>
+                                            <label>
+                                                Unit:
+                                                <select
+                                                    value={food.servingUnit}
+                                                    onChange={(e) =>
+                                                        updateFood(
+                                                            food.id,
+                                                            'servingUnit',
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                >
+                                                    <option value="cup">
+                                                        cup
+                                                    </option>
+                                                    <option value="tbsp">
+                                                        tbsp
+                                                    </option>
+                                                    <option value="tsp">
+                                                        tsp
+                                                    </option>
+                                                    <option value="oz">
+                                                        oz
+                                                    </option>
+                                                    <option value="g">g</option>
+                                                    <option value="lb">
+                                                        lb
+                                                    </option>
+                                                    <option value="piece">
+                                                        piece
+                                                    </option>
+                                                    <option value="slice">
+                                                        slice
+                                                    </option>
+                                                    <option value="serving">
+                                                        serving
+                                                    </option>
+                                                </select>
                                             </label>
                                         </div>
 
                                         <div className="food-macros">
-                                            <div className="macros-per-100g-display">
-                                                <strong>Per 100g:</strong>
+                                            <div className="macros-per-serving-display">
+                                                <strong>
+                                                    Per serving (
+                                                    {food.servingSize}{' '}
+                                                    {food.servingUnit}):
+                                                </strong>
                                                 <div className="macro-inputs">
                                                     <label className="carbs-text">
                                                         C:
                                                         <input
                                                             type="number"
                                                             value={
-                                                                food.carbsPer100g
+                                                                food.carbsPerServing
                                                             }
                                                             onChange={(e) =>
                                                                 updateFood(
                                                                     food.id,
-                                                                    'carbsPer100g',
+                                                                    'carbsPerServing',
                                                                     parseFloat(
                                                                         e.target
                                                                             .value
@@ -350,12 +423,12 @@ function MealPlanning({ isCollapsed, setIsCollapsed }: MealPlanningProps) {
                                                         <input
                                                             type="number"
                                                             value={
-                                                                food.proteinPer100g
+                                                                food.proteinPerServing
                                                             }
                                                             onChange={(e) =>
                                                                 updateFood(
                                                                     food.id,
-                                                                    'proteinPer100g',
+                                                                    'proteinPerServing',
                                                                     parseFloat(
                                                                         e.target
                                                                             .value
@@ -372,12 +445,12 @@ function MealPlanning({ isCollapsed, setIsCollapsed }: MealPlanningProps) {
                                                         <input
                                                             type="number"
                                                             value={
-                                                                food.fatPer100g
+                                                                food.fatPerServing
                                                             }
                                                             onChange={(e) =>
                                                                 updateFood(
                                                                     food.id,
-                                                                    'fatPer100g',
+                                                                    'fatPerServing',
                                                                     parseFloat(
                                                                         e.target
                                                                             .value
@@ -392,11 +465,7 @@ function MealPlanning({ isCollapsed, setIsCollapsed }: MealPlanningProps) {
                                                 </div>
                                             </div>
 
-                                            <div className="serving-nutrition">
-                                                <strong>
-                                                    Per serving (
-                                                    {food.servingSize}g):
-                                                </strong>
+                                            <div className="nutrition-summary">
                                                 <div className="nutrition-display">
                                                     <span className="carbs-text">
                                                         {macros.carbs.toFixed(

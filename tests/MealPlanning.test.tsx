@@ -69,18 +69,20 @@ describe('MealPlanning Component', () => {
                 {
                     id: 1,
                     name: 'Chicken Breast',
-                    carbsPer100g: 0,
-                    proteinPer100g: 31,
-                    fatPer100g: 3.6,
-                    servingSize: 100,
+                    servingSize: 1,
+                    servingUnit: 'piece',
+                    carbsPerServing: 0,
+                    proteinPerServing: 31,
+                    fatPerServing: 3.6,
                 },
                 {
                     id: 2,
                     name: 'Rice',
-                    carbsPer100g: 28,
-                    proteinPer100g: 2.7,
-                    fatPer100g: 0.3,
-                    servingSize: 100,
+                    servingSize: 1,
+                    servingUnit: 'cup',
+                    carbsPerServing: 28,
+                    proteinPerServing: 2.7,
+                    fatPerServing: 0.3,
                 },
             ];
 
@@ -147,17 +149,22 @@ describe('MealPlanning Component', () => {
                 'Chicken Breast'
             );
 
+            // Update serving size and unit
+            const servingSizeInput = screen.getByDisplayValue('1');
+            const unitSelect = screen.getByDisplayValue('cup');
+
+            await user.clear(servingSizeInput);
+            await user.type(servingSizeInput, '1');
+            await user.selectOptions(unitSelect, 'piece');
+
             // Get the macro input fields more specifically
             const carbsInput = screen.getByLabelText(/Carbs \(g\):/);
             const proteinInput = screen.getByLabelText(/Protein \(g\):/);
             const fatInput = screen.getByLabelText(/Fat \(g\):/);
-            const servingSizeInput = screen.getByDisplayValue('100');
 
-            await user.type(carbsInput, '0'); // carbs
-            await user.type(proteinInput, '31'); // protein
-            await user.type(fatInput, '3.6'); // fat
-            await user.clear(servingSizeInput);
-            await user.type(servingSizeInput, '150'); // serving size
+            await user.type(carbsInput, '0'); // carbs per serving
+            await user.type(proteinInput, '31'); // protein per serving
+            await user.type(fatInput, '3.6'); // fat per serving
 
             // Save
             await user.click(screen.getByText('Save Food'));
@@ -217,18 +224,20 @@ describe('MealPlanning Component', () => {
             {
                 id: 1,
                 name: 'Chicken Breast',
-                carbsPer100g: 0,
-                proteinPer100g: 31,
-                fatPer100g: 3.6,
-                servingSize: 100,
+                servingSize: 1,
+                servingUnit: 'piece',
+                carbsPerServing: 0,
+                proteinPerServing: 31,
+                fatPerServing: 3.6,
             },
             {
                 id: 2,
                 name: 'Brown Rice',
-                carbsPer100g: 28,
-                proteinPer100g: 2.7,
-                fatPer100g: 0.3,
-                servingSize: 150,
+                servingSize: 1.5,
+                servingUnit: 'cup',
+                carbsPerServing: 42,
+                proteinPerServing: 4.05,
+                fatPerServing: 0.45,
             },
         ];
 
@@ -248,30 +257,31 @@ describe('MealPlanning Component', () => {
             expect(screen.getByDisplayValue('Brown Rice')).toBeInTheDocument();
         });
 
-        it('shows macro information per 100g and per serving', () => {
+        it('shows macro information per serving', () => {
             render(<MealPlanning {...defaultProps} />);
 
-            // Check per 100g display
-            expect(screen.getAllByText('Per 100g:')[0]).toBeInTheDocument();
-
             // Check per serving display
-            expect(screen.getByText('Per serving (100g):')).toBeInTheDocument();
-            expect(screen.getByText('Per serving (150g):')).toBeInTheDocument();
+            expect(
+                screen.getByText('Per serving (1 piece):')
+            ).toBeInTheDocument();
+            expect(
+                screen.getByText('Per serving (1.5 cup):')
+            ).toBeInTheDocument();
         });
 
         it('calculates and displays nutrition per serving correctly', () => {
             render(<MealPlanning {...defaultProps} />);
 
-            // Chicken breast: 100g serving
+            // Chicken breast: 1 piece serving
             expect(screen.getByText('0.0g carbs')).toBeInTheDocument();
             expect(screen.getByText('31.0g protein')).toBeInTheDocument();
             expect(screen.getByText('3.6g fat')).toBeInTheDocument();
             expect(screen.getByText('156 cal')).toBeInTheDocument(); // (31*4) + (3.6*9) = 124 + 32.4 = 156.4 ≈ 156
 
-            // Brown rice: 150g serving (28*1.5, 2.7*1.5, 0.3*1.5)
+            // Brown rice: 1.5 cup serving
             expect(screen.getByText('42.0g carbs')).toBeInTheDocument();
-            expect(screen.getByText('4.1g protein')).toBeInTheDocument();
-            expect(screen.getByText(/0\.[34]g fat/)).toBeInTheDocument(); // Allow for decimal precision differences
+            expect(screen.getByText('4.0g protein')).toBeInTheDocument(); // Rounded from 4.05
+            expect(screen.getByText(/0\.[45]g fat/)).toBeInTheDocument(); // Rounded from 0.45
         });
 
         it('allows editing food names', async () => {
@@ -295,25 +305,25 @@ describe('MealPlanning Component', () => {
             const user = userEvent.setup();
             render(<MealPlanning {...defaultProps} />);
 
-            // Find and interact with serving size input
-            const servingSizeInput = screen.getByDisplayValue('100');
+            // Find and interact with serving size input (now shows "1" instead of "100")
+            const servingSizeInput = screen.getByDisplayValue('1');
 
             // Just verify that clicking and typing triggers the onChange
             await user.click(servingSizeInput);
-            await user.keyboard('{Backspace}{Backspace}{Backspace}200');
+            await user.keyboard('{Backspace}2');
 
             // Verify localStorage was called (which means the component updated)
             expect(mockLocalStorage.setItem).toHaveBeenCalled();
 
-            // And verify the serving size appears somewhere in the updated nutrition display
+            // And verify the serving size appears in the updated nutrition display
             await waitFor(() => {
-                // The nutrition should reflect some change due to serving size modification
-                const nutritionElements = screen.getAllByText(/g\)/);
+                // The nutrition should reflect change due to serving size modification
+                const nutritionElements = screen.getAllByText(/piece\)/);
                 expect(nutritionElements.length).toBeGreaterThan(0);
             });
         });
 
-        it('allows editing macro values per 100g', async () => {
+        it('allows editing macro values per serving', async () => {
             const user = userEvent.setup();
             render(<MealPlanning {...defaultProps} />);
 
@@ -326,7 +336,7 @@ describe('MealPlanning Component', () => {
             await waitFor(() => {
                 expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
                     'foods',
-                    expect.stringContaining('"proteinPer100g":35')
+                    expect.stringContaining('"proteinPerServing":35')
                 );
             });
         });
@@ -354,10 +364,11 @@ describe('MealPlanning Component', () => {
                 {
                     id: 1,
                     name: 'Water',
-                    carbsPer100g: 0,
-                    proteinPer100g: 0,
-                    fatPer100g: 0,
-                    servingSize: 250,
+                    servingSize: 1,
+                    servingUnit: 'cup',
+                    carbsPerServing: 0,
+                    proteinPerServing: 0,
+                    fatPerServing: 0,
                 },
             ];
 
@@ -377,10 +388,11 @@ describe('MealPlanning Component', () => {
                 {
                     id: 1,
                     name: 'Avocado',
-                    carbsPer100g: 8.5,
-                    proteinPer100g: 2.0,
-                    fatPer100g: 14.7,
-                    servingSize: 50,
+                    servingSize: 0.5,
+                    servingUnit: 'piece',
+                    carbsPerServing: 4.25,
+                    proteinPerServing: 1.0,
+                    fatPerServing: 7.35,
                 },
             ];
 
@@ -389,7 +401,7 @@ describe('MealPlanning Component', () => {
             );
             render(<MealPlanning {...defaultProps} />);
 
-            // 50g serving: 8.5*0.5, 2.0*0.5, 14.7*0.5
+            // Verify the expected values shown
             expect(screen.getByText('4.3g carbs')).toBeInTheDocument();
             expect(screen.getByText('1.0g protein')).toBeInTheDocument();
             expect(screen.getByText(/7\.[23]g fat/)).toBeInTheDocument(); // Allow for precision differences
@@ -400,10 +412,11 @@ describe('MealPlanning Component', () => {
                 {
                     id: 1,
                     name: 'Pasta',
-                    carbsPer100g: 25,
-                    proteinPer100g: 5,
-                    fatPer100g: 1,
-                    servingSize: 300,
+                    servingSize: 3,
+                    servingUnit: 'cup',
+                    carbsPerServing: 75,
+                    proteinPerServing: 15,
+                    fatPerServing: 3,
                 },
             ];
 
@@ -450,7 +463,7 @@ describe('MealPlanning Component', () => {
             // Should save with the negative value (validation could be added later)
             expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
                 'foods',
-                expect.stringContaining('"carbsPer100g":-5')
+                expect.stringContaining('"carbsPerServing":-5')
             );
         });
 
@@ -459,10 +472,11 @@ describe('MealPlanning Component', () => {
                 {
                     id: 1,
                     name: 'Salt',
-                    carbsPer100g: 0,
-                    proteinPer100g: 0,
-                    fatPer100g: 0,
                     servingSize: 1,
+                    servingUnit: 'tsp',
+                    carbsPerServing: 0,
+                    proteinPerServing: 0,
+                    fatPerServing: 0,
                 },
             ];
 
@@ -471,7 +485,9 @@ describe('MealPlanning Component', () => {
             );
             render(<MealPlanning {...defaultProps} />);
 
-            expect(screen.getByText('Per serving (1g):')).toBeInTheDocument();
+            expect(
+                screen.getByText('Per serving (1 tsp):')
+            ).toBeInTheDocument();
         });
 
         it('handles missing form fields gracefully', async () => {
@@ -493,7 +509,7 @@ describe('MealPlanning Component', () => {
             expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
                 'foods',
                 expect.stringMatching(
-                    /"carbsPer100g":0.*"proteinPer100g":0.*"fatPer100g":0/
+                    /"carbsPerServing":0.*"proteinPerServing":0.*"fatPerServing":0/
                 )
             );
         });
