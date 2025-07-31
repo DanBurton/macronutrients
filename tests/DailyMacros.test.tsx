@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import MealPlanning, { type Meal } from '../src/MealPlanning';
+import DailyMacros, { type Meal } from '../src/DailyMacros';
 import type { MacroRatios } from '../src/constants';
 
-describe('MealPlanning Component', () => {
+describe('DailyMacros Component', () => {
     const mockSetMeals = vi.fn();
 
     const defaultProps = {
@@ -23,18 +23,18 @@ describe('MealPlanning Component', () => {
     });
 
     describe('Initial State', () => {
-        it('renders meal planning section with add meal button', () => {
-            render(<MealPlanning {...defaultProps} />);
+        it('renders daily macros section with add meal button', () => {
+            render(<DailyMacros {...defaultProps} />);
 
-            expect(screen.getByText('Meal Planning')).toBeInTheDocument();
+            expect(screen.getByText('Daily Macros')).toBeInTheDocument();
             expect(screen.getByText('+ Add Meal')).toBeInTheDocument();
         });
 
         it('shows empty state when no meals', () => {
-            render(<MealPlanning {...defaultProps} />);
+            render(<DailyMacros {...defaultProps} />);
 
             // Should show only the header and add button when no meals
-            expect(screen.getByText('Meal Planning')).toBeInTheDocument();
+            expect(screen.getByText('Daily Macros')).toBeInTheDocument();
             expect(screen.getByText('+ Add Meal')).toBeInTheDocument();
 
             // Should not show macro tracking charts when empty
@@ -45,7 +45,7 @@ describe('MealPlanning Component', () => {
     describe('Adding Meals', () => {
         it('calls setMeals when add meal button is clicked', async () => {
             const user = userEvent.setup();
-            render(<MealPlanning {...defaultProps} />);
+            render(<DailyMacros {...defaultProps} />);
 
             const addButton = screen.getByText('+ Add Meal');
             await user.click(addButton);
@@ -69,7 +69,7 @@ describe('MealPlanning Component', () => {
         ];
 
         it('displays existing meals', () => {
-            render(<MealPlanning {...defaultProps} meals={sampleMeals} />);
+            render(<DailyMacros {...defaultProps} meals={sampleMeals} />);
 
             expect(screen.getByDisplayValue('Breakfast')).toBeInTheDocument();
             expect(screen.getByDisplayValue('Lunch')).toBeInTheDocument();
@@ -78,7 +78,7 @@ describe('MealPlanning Component', () => {
         });
 
         it('calculates total macros correctly', () => {
-            render(<MealPlanning {...defaultProps} meals={sampleMeals} />);
+            render(<DailyMacros {...defaultProps} meals={sampleMeals} />);
 
             // Total: 110g carbs, 50g protein, 35g fat
             // Against goals of 225g carbs, 125g protein, 67g fat
@@ -90,7 +90,7 @@ describe('MealPlanning Component', () => {
         });
 
         it('shows progress bars for macro tracking', () => {
-            render(<MealPlanning {...defaultProps} meals={sampleMeals} />);
+            render(<DailyMacros {...defaultProps} meals={sampleMeals} />);
 
             // Should show progress bars (including calories)
             const progressBars = document.querySelectorAll('.progress-bar');
@@ -99,7 +99,7 @@ describe('MealPlanning Component', () => {
 
         it('handles meal updates', async () => {
             const user = userEvent.setup();
-            render(<MealPlanning {...defaultProps} meals={sampleMeals} />);
+            render(<DailyMacros {...defaultProps} meals={sampleMeals} />);
 
             // Test updating a macro value - focus on the macro input and type
             const carbsInput = screen.getByDisplayValue('50'); // breakfast carbs
@@ -131,7 +131,7 @@ describe('MealPlanning Component', () => {
         });
         it('handles meal deletion', async () => {
             const user = userEvent.setup();
-            render(<MealPlanning {...defaultProps} meals={sampleMeals} />);
+            render(<DailyMacros {...defaultProps} meals={sampleMeals} />);
 
             const deleteButtons = screen.getAllByText('🗑');
             await user.click(deleteButtons[0]); // delete first meal
@@ -154,7 +154,7 @@ describe('MealPlanning Component', () => {
                 }, // exceeds carb goal
             ];
 
-            render(<MealPlanning {...defaultProps} meals={highMacroMeals} />);
+            render(<DailyMacros {...defaultProps} meals={highMacroMeals} />);
 
             // Should show over 100% for carbs
             expect(
@@ -178,7 +178,7 @@ describe('MealPlanning Component', () => {
                 },
             ];
 
-            render(<MealPlanning {...defaultProps} meals={highMacroMeals} />);
+            render(<DailyMacros {...defaultProps} meals={highMacroMeals} />);
 
             // Progress bars should not exceed 100% width
             const progressFills = document.querySelectorAll('.progress-fill');
@@ -192,10 +192,10 @@ describe('MealPlanning Component', () => {
 
     describe('Edge Cases', () => {
         it('handles zero calorie goals', () => {
-            render(<MealPlanning {...defaultProps} dailyCalories={0} />);
+            render(<DailyMacros {...defaultProps} dailyCalories={0} />);
 
             // Should not crash with division by zero
-            expect(screen.getByText('Meal Planning')).toBeInTheDocument();
+            expect(screen.getByText('Daily Macros')).toBeInTheDocument();
         });
 
         it('handles meals with zero macros', () => {
@@ -203,7 +203,7 @@ describe('MealPlanning Component', () => {
                 { id: 1, name: 'Water', carbs: 0, protein: 0, fat: 0 },
             ];
 
-            render(<MealPlanning {...defaultProps} meals={zeroMacroMeals} />);
+            render(<DailyMacros {...defaultProps} meals={zeroMacroMeals} />);
 
             expect(screen.getByDisplayValue('Water')).toBeInTheDocument();
             expect(screen.getByText('0g / 225g (0% DV)')).toBeInTheDocument();
@@ -221,7 +221,7 @@ describe('MealPlanning Component', () => {
             ];
 
             render(
-                <MealPlanning {...defaultProps} meals={negativeMacroMeals} />
+                <DailyMacros {...defaultProps} meals={negativeMacroMeals} />
             );
 
             // Should display the negative values without crashing

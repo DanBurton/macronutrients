@@ -1,4 +1,4 @@
-/* Meal Planning Styles */
+/* Daily Macros Styles */
 .meal-planning {
     margin-top: 1.5rem;
 }
@@ -243,7 +243,7 @@
     color: #2196f3;
 }
 
-/* Mobile styles for meal planning */
+/* Mobile styles for daily macros */
 @media (max-width: 768px) {
     .meal-row {
         flex-direction: column;

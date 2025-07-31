@@ -13,6 +13,7 @@
         "preview": "vite preview",
         "deploy": "npm run build && gh-pages -d dist",
         "test:watch": "vitest",
+        "test": "vitest run",
         "test:run": "vitest run",
         "test:ci": "vitest run --coverage --reporter=verbose --reporter=junit --outputFile.junit=./test-results.xml --coverage.reporter=text --coverage.reporter=clover --coverage.reporter=cobertura",
         "test:ui": "vitest --ui"

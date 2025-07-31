@@ -20,14 +20,14 @@ describe('App Component Integration Tests', () => {
     });
 
     describe('Initial State', () => {
-        it('renders both main sections (goal setting and meal planning)', () => {
+        it('renders both main sections (goal setting and daily macros)', () => {
             render(<App />);
 
             // Check if main app structure is present
             expect(
                 screen.getByLabelText('Daily Calorie Goal')
             ).toBeInTheDocument();
-            expect(screen.getByText('Meal Planning')).toBeInTheDocument();
+            expect(screen.getByText('Daily Macros')).toBeInTheDocument();
             expect(screen.getByText('+ Add Meal')).toBeInTheDocument();
         });
 
@@ -39,8 +39,8 @@ describe('App Component Integration Tests', () => {
         });
     });
 
-    describe('Integration between Goal Setting and Meal Planning', () => {
-        it('passes calorie goals correctly to meal planning section', async () => {
+    describe('Integration between Goal Setting and Daily Macros', () => {
+        it('passes calorie goals correctly to daily macros section', async () => {
             const user = userEvent.setup();
             render(<App />);
 
@@ -53,9 +53,9 @@ describe('App Component Integration Tests', () => {
             const addMealButton = screen.getByText('+ Add Meal');
             await user.click(addMealButton);
 
-            // The meal planning section should be aware of the new calorie goal
+            // The daily macros section should be aware of the new calorie goal
             // (This is tested more thoroughly in MealPlanning.test.tsx)
-            expect(screen.getByText('Meal Planning')).toBeInTheDocument();
+            expect(screen.getByText('Daily Macros')).toBeInTheDocument();
         });
 
         it('maintains state consistency between components', async () => {
@@ -75,7 +75,7 @@ describe('App Component Integration Tests', () => {
             expect(screen.getByText('100g protein')).toBeInTheDocument();
 
             // Meal planning should still be visible
-            expect(screen.getByText('Meal Planning')).toBeInTheDocument();
+            expect(screen.getByText('Daily Macros')).toBeInTheDocument();
         });
     });
 
@@ -129,7 +129,7 @@ describe('App Component Integration Tests', () => {
 
             expect(appElement).toBeInTheDocument();
             expect(mainElement).toBeInTheDocument();
-            expect(cards).toHaveLength(2); // Goal setting card + meal planning card
+            expect(cards).toHaveLength(2); // Goal setting card + daily macros card
         });
 
         it('maintains responsive layout structure', () => {

@@ -1,6 +1,6 @@
 import { type MacroRatios } from './constants';
 import { calculateTotalCalories, calculateGoalMacros } from './utils';
-import './MealPlanning.css';
+import './DailyMacros.css';
 import './shared.css';
 
 interface Meal {
@@ -11,7 +11,7 @@ interface Meal {
     fat: number;
 }
 
-interface MealPlanningProps {
+interface DailyMacrosProps {
     meals: Meal[];
     setMeals: (meals: Meal[]) => void;
     dailyCalories: number;
@@ -58,12 +58,12 @@ function MacroBar({ label, current, goal, unit, colorClass }: MacroBarProps) {
     );
 }
 
-function MealPlanning({
+function DailyMacros({
     meals,
     setMeals,
     dailyCalories,
     currentMacros,
-}: MealPlanningProps) {
+}: DailyMacrosProps) {
     const addMeal = () => {
         const newMeal: Meal = {
             id: Date.now(),
@@ -108,7 +108,7 @@ function MealPlanning({
     return (
         <div className="meal-planning">
             <div className="meal-planning-header">
-                <h3>Meal Planning</h3>
+                <h3>Daily Macros</h3>
                 <button className="add-meal-button" onClick={addMeal}>
                     + Add Meal
                 </button>
@@ -253,5 +253,5 @@ function MealPlanning({
     );
 }
 
-export default MealPlanning;
+export default DailyMacros;
 export type { Meal };

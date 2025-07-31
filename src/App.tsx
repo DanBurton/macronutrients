@@ -1,5 +1,5 @@
 import './App.css';
-import MealPlanning, { type Meal } from './MealPlanning';
+import DailyMacros, { type Meal } from './DailyMacros';
 import GoalSetting from './GoalSetting';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { MACRO_PRESETS, type PresetKey, type MacroRatios } from './constants';
@@ -60,7 +60,7 @@ function App() {
                 </div>
 
                 <div className="card">
-                    <MealPlanning
+                    <DailyMacros
                         meals={meals}
                         setMeals={setMeals}
                         dailyCalories={dailyCalories}
